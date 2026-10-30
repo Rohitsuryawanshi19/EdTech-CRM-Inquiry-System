@@ -38,9 +38,15 @@ export const Footer = ({ onNavigate }) => {
                   <GraduationCap className="w-4 h-4" />
                 </div>
               </div>
-              <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
-                K12 Hunar
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-xl text-amber-600 dark:text-amber-400 tracking-tight">
+                  K12
+                </span>
+                <span className="text-slate-400 dark:text-slate-500 font-bold">:</span>
+                <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+                  EdTech CRM & Inquiry System
+                </span>
+              </div>
             </div>
             <p className="text-xs sm:text-sm leading-relaxed max-w-[280px]">
               Supporting school students, parents, and partner institutions through scholarships, performing arts, and learning admissions.

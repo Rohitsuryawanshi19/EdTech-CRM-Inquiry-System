@@ -225,13 +225,19 @@ export const AdminDashboard = () => {
       <header className="bg-white dark:bg-[#0B0F19] border-b border-slate-200 dark:border-white/10 sticky top-0 z-30 transition-colors">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span
+            <div
               onClick={() => setCurrentView('home')}
-              className="font-black text-xl text-slate-900 dark:text-white cursor-pointer tracking-tight"
+              className="flex items-center gap-1.5 cursor-pointer select-none"
             >
-              K12 Hunar
-            </span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-white/10 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-white/10 font-bold">
+              <span className="font-black text-xl text-amber-600 dark:text-amber-400 tracking-tight">
+                K12
+              </span>
+              <span className="text-slate-400 dark:text-slate-500 font-bold">:</span>
+              <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+                EdTech CRM & Inquiry System
+              </span>
+            </div>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/10 dark:bg-amber-400/10 text-amber-800 dark:text-amber-300 border border-amber-500/25 dark:border-amber-400/20 font-bold">
               Admin Desk
             </span>
           </div>

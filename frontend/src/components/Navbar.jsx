@@ -42,9 +42,15 @@ export const Navbar = ({ onNavigate }) => {
               <GraduationCap className="w-5 h-5" />
             </div>
           </div>
-          <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
-            K12 Hunar
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-black text-xl text-amber-600 dark:text-amber-400 tracking-tight">
+              K12
+            </span>
+            <span className="text-slate-400 dark:text-slate-500 font-bold">:</span>
+            <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+              EdTech CRM & Inquiry System
+            </span>
+          </div>
         </div>
 
         {/* Navigation Links */}

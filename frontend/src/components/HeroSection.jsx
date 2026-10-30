@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, GraduationCap, Music } from 'lucide-react';
+import { ArrowRight, Compass, GraduationCap, Music } from 'lucide-react';
 
 export const HeroSection = ({ onScrollToForm }) => {
   const handleScrollToPrograms = () => {
@@ -15,9 +15,9 @@ export const HeroSection = ({ onScrollToForm }) => {
           {/* Left Column (7 cols): Heading, copy, CTA buttons */}
           <div className="lg:col-span-7">
             
-            {/* Top Pill: ✨ Admissions & Inquiry Desk */}
+            {/* Top Pill: 🧭 Admissions & Inquiry Desk */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-amber-800 dark:text-amber-300 text-xs font-bold mb-6 shadow-sm backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <Compass className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span>Admissions & Inquiry Desk</span>
             </div>
 
