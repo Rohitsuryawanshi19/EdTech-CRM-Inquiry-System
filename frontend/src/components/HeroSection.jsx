@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight, Sparkles, GraduationCap, Music } from 'lucide-react';
 
 export const HeroSection = ({ onScrollToForm }) => {
   const handleScrollToPrograms = () => {
@@ -7,57 +8,97 @@ export const HeroSection = ({ onScrollToForm }) => {
   };
 
   return (
-    <section className="pt-14 pb-14 sm:pt-20 sm:pb-20 border-b border-[#E2D9C8]">
+    <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden hero-ambient-bg border-b border-slate-200 dark:border-white/10 transition-colors">
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column (7 cols) */}
+          {/* Left Column (7 cols): Heading, copy, CTA buttons */}
           <div className="lg:col-span-7">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#D9552B] mb-3">
-              Scholarships · Concerts · Admissions
-            </p>
+            
+            {/* Top Pill: ✨ Inquiry desk */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/80 dark:bg-white/5 border border-indigo-200/80 dark:border-white/10 text-indigo-700 dark:text-cyan-300 text-xs font-bold mb-6 shadow-sm backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
+              <span>Inquiry Desk & Admissions</span>
+            </div>
 
-            <h1 className="font-serif font-bold text-[#1E2A3A] mb-6 tracking-tight text-balance">
-              Questions about scholarships, concerts or admissions? Ask us here.
+            {/* Main Headline with right guidance gradient */}
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.85rem] font-black text-slate-900 dark:text-white tracking-[-0.03em] leading-[1.08] mb-6">
+              Ask once.<br />
+              Grow with the{' '}
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-indigo-300 dark:via-cyan-300 dark:to-teal-200 bg-clip-text text-transparent">
+                right guidance.
+              </span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#556070] mb-8 leading-relaxed max-w-[580px]">
-              Parents, students and schools can send one inquiry and our team will reply by email or phone.
+            {/* Subtitle paragraph */}
+            <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg mb-8 leading-relaxed max-w-[520px]">
+              Parents, students and schools can reach the K12 Hunar academic desk for scholarships, performing arts concerts, and student admissions—all unified in one place.
             </p>
 
+            {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={onScrollToForm}
-                className="btn-primary"
+                className="btn-hero-primary"
               >
-                Send an inquiry
+                <span>Submit an inquiry</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
                 onClick={handleScrollToPrograms}
-                className="btn-secondary"
+                className="btn-hero-secondary"
               >
-                See our programs
+                Explore categories
               </button>
             </div>
+
           </div>
 
-          {/* Right Column (5 cols) with 12px offset line border */}
-          <div className="lg:col-span-5">
-            <div className="relative max-w-[460px] mx-auto lg:max-w-none">
-              {/* 2px --line outline shifted 12px behind */}
-              <div 
-                className="absolute inset-0 translate-x-3 translate-y-3 rounded-[10px] border-2 border-[#E2D9C8] pointer-events-none"
-                aria-hidden="true"
-              />
+          {/* Right Column (5 cols): Framed photo with 2 floating cards overlapping edges */}
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
+            <div className="relative max-w-[420px] mx-auto">
               
-              {/* Main Real Photo */}
-              <img
-                src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=900&q=80"
-                alt="Students collaborating in an educational classroom"
-                className="relative z-10 w-full h-[360px] sm:h-[400px] object-cover rounded-[10px] border border-[#E2D9C8] bg-[#F3ECE0]"
-                loading="eager"
-              />
+              {/* Floating Card 1 (Top-Left Edge Overlap) */}
+              <div className="hero-floating-card absolute -top-4 -left-4 sm:-left-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 dark:text-amber-300 flex items-center justify-center flex-shrink-0">
+                  <GraduationCap className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
+                    Scholarships
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Applications open
+                  </p>
+                </div>
+              </div>
+
+              {/* Framed Classroom Photo */}
+              <div className="rounded-2xl border-2 border-slate-200/80 dark:border-white/15 overflow-hidden shadow-2xl bg-slate-900">
+                <img
+                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
+                  alt="Teacher guiding students raising their hands in classroom"
+                  className="w-full h-[400px] sm:h-[440px] object-cover"
+                  loading="eager"
+                />
+              </div>
+
+              {/* Floating Card 2 (Bottom-Right Edge Overlap) */}
+              <div className="hero-floating-card absolute -bottom-4 -right-4 sm:-right-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 flex items-center justify-center flex-shrink-0">
+                  <Music className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
+                    Concerts & Arts
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Showcase season
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
 

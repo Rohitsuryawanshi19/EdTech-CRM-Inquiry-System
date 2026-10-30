@@ -34,19 +34,22 @@ export const FeaturesSection = ({ onNavigate }) => {
   return (
     <>
       {/* 1. Programs Section */}
-      <section id="programs" className="py-16 sm:py-20 border-b border-[#E2D9C8]">
+      <section id="programs" className="py-20 sm:py-28 border-b border-slate-200 dark:border-white/10 transition-colors">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
           
-          <div className="mb-12 reveal">
-            <h2 className="font-serif font-bold text-3xl text-[#1E2A3A] mb-2">
+          <div className="mb-14 reveal">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-white/5 border border-indigo-200 dark:border-white/10 text-indigo-700 dark:text-cyan-300 text-xs font-bold mb-4 uppercase tracking-wider">
+              Educational Pathways
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-3 tracking-[-0.03em]">
               Programs we support
             </h2>
-            <p className="text-sm sm:text-base text-[#556070]">
-              Select a program to view full curriculum facts, key highlights, and application steps.
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl">
+              Explore specialized academic scholarships, regional concert festivals, and seamless admission guidance.
             </p>
           </div>
 
-          {/* 2x2 Grid with 3px lift, 1.04 image scale, 4px arrow slide, and 60ms stagger */}
+          {/* 2x2 Grid with 3px lift and 1.04 image scale */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {programs.map((prog, index) => {
               const fallbackUrl = PHOTO_CARD_FALLBACKS[prog.slug];
@@ -59,10 +62,10 @@ export const FeaturesSection = ({ onNavigate }) => {
                       onNavigate(`/programs/${prog.slug}`);
                     }
                   }}
-                  className={`warm-card rounded-[10px] overflow-hidden border-t-4 ${prog.topBorder} cursor-pointer group program-card bg-white reveal ${staggerClass}`}
+                  className={`rounded-2xl overflow-hidden border-t-4 ${prog.topBorder} cursor-pointer group program-card bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 shadow-lg hover:shadow-2xl transition-all duration-300 reveal ${staggerClass}`}
                 >
-                  {/* 16:10 Photo with smooth 400ms zoom to 1.04 */}
-                  <div className="aspect-[16/10] w-full overflow-hidden bg-[#F3ECE0]">
+                  {/* 16:10 Photo with smooth zoom */}
+                  <div className="aspect-[16/10] w-full overflow-hidden bg-slate-900">
                     <ImageWithFallback
                       src={prog.cardImage}
                       fallbackImage={fallbackUrl}
@@ -73,23 +76,23 @@ export const FeaturesSection = ({ onNavigate }) => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-6 sm:p-8">
                     <span
-                      className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-[999px] mb-3"
-                      style={{ backgroundColor: prog.tintBg, color: prog.tint }}
+                      className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wider"
+                      style={{ backgroundColor: `${prog.tint}18`, color: prog.tint }}
                     >
                       {prog.category}
                     </span>
 
-                    <h3 className="font-serif font-bold text-lg text-[#1E2A3A] mb-2 group-hover:text-[#1F5F4A] transition-colors">
+                    <h3 className="font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-cyan-400 transition-colors">
                       {prog.name}
                     </h3>
 
-                    <p className="text-sm text-[#556070] line-clamp-2 mb-4 leading-relaxed">
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 line-clamp-2 mb-6 leading-relaxed">
                       {prog.overview[0] || prog.tagline}
                     </p>
 
-                    <span className="text-sm font-semibold text-[#1F5F4A] inline-flex items-center gap-1">
+                    <span className="text-sm font-bold text-indigo-600 dark:text-cyan-400 inline-flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
                       <span>View details</span>
                       <span className="program-card-arrow">&rarr;</span>
                     </span>
@@ -103,35 +106,38 @@ export const FeaturesSection = ({ onNavigate }) => {
       </section>
 
       {/* 2. How It Works Section */}
-      <section id="how-it-works" className="py-16 sm:py-20 border-b border-[#E2D9C8] bg-[#F3ECE0]">
+      <section id="how-it-works" className="py-20 sm:py-28 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0E1424] transition-colors">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
           
-          <div className="mb-12 reveal">
-            <h2 className="font-serif font-bold text-3xl text-[#1E2A3A] mb-2">
+          <div className="mb-14 reveal">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs font-bold mb-4 uppercase tracking-wider">
+              Step by step
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-3 tracking-[-0.03em]">
               How it works
             </h2>
-            <p className="text-sm sm:text-base text-[#556070]">
-              A straightforward process from inquiry submission to direct counselor follow-up.
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl">
+              A transparent, prompt response cycle designed for students, families, and partner schools.
             </p>
           </div>
 
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
             <div 
-              className="hidden md:block absolute top-6 left-12 right-12 h-[1px] bg-[#E2D9C8] -z-0" 
+              className="hidden md:block absolute top-7 left-12 right-12 h-[2px] bg-slate-200 dark:bg-white/10 -z-0" 
               aria-hidden="true"
             />
 
             {STEPS.map((item, idx) => {
               const stepStagger = `stagger-${idx + 1}`;
               return (
-                <div key={idx} className={`relative z-10 reveal ${stepStagger}`}>
-                  <div className="w-12 h-12 rounded-[999px] bg-white border border-[#E2D9C8] text-[#1E2A3A] font-serif font-bold text-base flex items-center justify-center mb-4 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+                <div key={idx} className={`relative z-10 p-6 sm:p-7 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow reveal ${stepStagger}`}>
+                  <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-cyan-500/10 border border-indigo-200 dark:border-cyan-500/20 text-indigo-600 dark:text-cyan-400 font-extrabold text-base flex items-center justify-center mb-5 shadow-sm">
                     {item.step}
                   </div>
-                  <h3 className="font-serif font-bold text-base text-[#1E2A3A] mb-2">
+                  <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-[#556070] leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                     {item.description}
                   </p>
                 </div>

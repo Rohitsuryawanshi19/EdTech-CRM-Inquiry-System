@@ -191,36 +191,36 @@ export const AdminDashboard = () => {
     searchTerm || selectedCategory !== 'All' || selectedUserType !== 'All' || selectedStatus !== 'All';
 
   return (
-    <div className="min-h-screen bg-[#FBF7F0] text-[#1E2A3A]">
+    <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-main)] transition-colors">
       
       {/* 1. Dashboard Top Bar */}
-      <header className="bg-white border-b border-[#E2D9C8] sticky top-0 z-30">
+      <header className="bg-white dark:bg-[#0B0F19] border-b border-slate-200 dark:border-white/10 sticky top-0 z-30 transition-colors">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span
               onClick={() => setCurrentView('home')}
-              className="font-serif font-bold text-xl text-[#1E2A3A] cursor-pointer"
+              className="font-black text-xl text-slate-900 dark:text-white cursor-pointer tracking-tight"
             >
               K12 Hunar
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-[999px] bg-[#F3ECE0] text-[#556070] border border-[#E2D9C8]">
-              Admin desk
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-white/10 text-indigo-700 dark:text-cyan-300 border border-indigo-200 dark:border-white/10 font-bold">
+              Admin Desk
             </span>
           </div>
 
           <div className="flex items-center gap-5 text-sm">
-            <span className="hidden sm:inline text-xs text-[#556070]">
+            <span className="hidden sm:inline text-xs text-slate-500 dark:text-slate-400 font-medium">
               {admin?.email || 'admin@k12hunar.com'}
             </span>
             <button
               onClick={() => setCurrentView('home')}
-              className="text-xs font-medium text-[#1F5F4A] hover:underline"
+              className="text-xs font-bold text-indigo-600 dark:text-cyan-400 hover:underline"
             >
               View public site
             </button>
             <button
               onClick={logout}
-              className="text-xs font-medium text-[#556070] hover:text-[#B3261E] transition-colors"
+              className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-rose-500 transition-colors"
             >
               Log out
             </button>
@@ -234,10 +234,10 @@ export const AdminDashboard = () => {
         {/* Title Bar & Actions */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-serif font-bold text-3xl text-[#1E2A3A]">
-              Inquiries
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-[-0.03em]">
+              Inquiries & CRM
             </h1>
-            <p className="text-sm text-[#556070] mt-1">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
               Review and manage incoming submissions from parents, students, and schools.
             </p>
           </div>
@@ -246,7 +246,7 @@ export const AdminDashboard = () => {
             <button
               onClick={() => loadData(true)}
               disabled={isRefreshing}
-              className="btn-secondary !text-xs !py-2 !px-3.5 !min-h-[38px]"
+              className="btn-hero-secondary !text-xs !py-2 !px-4 !min-h-[38px] !font-bold"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
@@ -254,7 +254,7 @@ export const AdminDashboard = () => {
 
             <button
               onClick={handleExportCSV}
-              className="btn-secondary !text-xs !py-2 !px-3.5 !min-h-[38px]"
+              className="btn-hero-secondary !text-xs !py-2 !px-4 !min-h-[38px] !font-bold"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
@@ -266,41 +266,41 @@ export const AdminDashboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           
           {/* Tile 1: Total */}
-          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1E2A3A] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
-            <span className="block text-xs font-medium text-[#556070] mb-1">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 border-l-4 border-l-slate-900 dark:border-l-indigo-500 p-5 shadow-sm">
+            <span className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
               Total inquiries
             </span>
-            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+            <span className="font-black text-3xl sm:text-4xl text-slate-900 dark:text-white">
               {stats.total || inquiries.length}
             </span>
           </div>
 
           {/* Tile 2: New (Pending) */}
-          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#E8A317] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
-            <span className="block text-xs font-medium text-[#556070] mb-1">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 border-l-4 border-l-amber-500 p-5 shadow-sm">
+            <span className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
               New
             </span>
-            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+            <span className="font-black text-3xl sm:text-4xl text-slate-900 dark:text-white">
               {stats.pending}
             </span>
           </div>
 
           {/* Tile 3: In progress */}
-          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1F4E79] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
-            <span className="block text-xs font-medium text-[#556070] mb-1">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 border-l-4 border-l-blue-500 p-5 shadow-sm">
+            <span className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
               In progress
             </span>
-            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+            <span className="font-black text-3xl sm:text-4xl text-slate-900 dark:text-white">
               {stats.inProgress}
             </span>
           </div>
 
           {/* Tile 4: Resolved */}
-          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1F5F4A] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
-            <span className="block text-xs font-medium text-[#556070] mb-1">
+          <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 border-l-4 border-l-emerald-500 p-5 shadow-sm">
+            <span className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
               Resolved
             </span>
-            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+            <span className="font-black text-3xl sm:text-4xl text-slate-900 dark:text-white">
               {stats.resolved}
             </span>
           </div>
@@ -308,12 +308,12 @@ export const AdminDashboard = () => {
         </div>
 
         {/* 3. Filter Row */}
-        <div className="bg-white rounded-[10px] border border-[#E2D9C8] p-5 mb-6 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 p-5 mb-6 shadow-sm transition-colors">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             
             {/* Search by Name or Phone */}
             <div>
-              <label className="form-label" htmlFor="filter-search">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="filter-search">
                 Search by name or phone
               </label>
               <div className="relative">
@@ -323,25 +323,25 @@ export const AdminDashboard = () => {
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="form-input !h-[40px] !min-h-[40px] pl-9 text-xs"
+                  className="w-full h-11 pl-9 pr-3 rounded-xl text-xs bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 transition-colors"
                 />
-                <Search className="w-3.5 h-3.5 text-[#556070] absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
             </div>
 
             {/* Category */}
             <div>
-              <label className="form-label" htmlFor="filter-category">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="filter-category">
                 Category
               </label>
               <select
                 id="filter-category"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="form-input !h-[40px] !min-h-[40px] text-xs"
+                className="w-full h-11 px-3 rounded-xl text-xs bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 transition-colors"
               >
                 {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
+                  <option key={cat} value={cat} className="bg-slate-900 text-white">
                     {cat === 'All' ? 'All categories' : cat}
                   </option>
                 ))}
@@ -350,17 +350,17 @@ export const AdminDashboard = () => {
 
             {/* User Type */}
             <div>
-              <label className="form-label" htmlFor="filter-user-type">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="filter-user-type">
                 User type
               </label>
               <select
                 id="filter-user-type"
                 value={selectedUserType}
                 onChange={(e) => setSelectedUserType(e.target.value)}
-                className="form-input !h-[40px] !min-h-[40px] text-xs"
+                className="w-full h-11 px-3 rounded-xl text-xs bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 transition-colors"
               >
                 {USER_TYPES.map((type) => (
-                  <option key={type} value={type}>
+                  <option key={type} value={type} className="bg-slate-900 text-white">
                     {type === 'All' ? 'All user types' : type}
                   </option>
                 ))}
@@ -369,17 +369,17 @@ export const AdminDashboard = () => {
 
             {/* Status */}
             <div>
-              <label className="form-label" htmlFor="filter-status">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="filter-status">
                 Status
               </label>
               <select
                 id="filter-status"
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="form-input !h-[40px] !min-h-[40px] text-xs"
+                className="w-full h-11 px-3 rounded-xl text-xs bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 transition-colors"
               >
                 {STATUS_OPTIONS.map((st) => (
-                  <option key={st.value} value={st.value}>
+                  <option key={st.value} value={st.value} className="bg-slate-900 text-white">
                     {st.label}
                   </option>
                 ))}
@@ -390,11 +390,11 @@ export const AdminDashboard = () => {
 
           {/* Clear Filters Link */}
           {hasActiveFilters && (
-            <div className="mt-4 pt-3 border-t border-[#E2D9C8] flex items-center justify-between text-xs text-[#556070]">
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>Active filters applied</span>
               <button
                 onClick={handleClearFilters}
-                className="text-xs font-semibold text-[#D9552B] hover:underline"
+                className="text-xs font-bold text-indigo-600 dark:text-cyan-400 hover:underline"
               >
                 Clear filters
               </button>
@@ -404,19 +404,19 @@ export const AdminDashboard = () => {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 rounded-[8px] bg-[#FDECEA] border border-[#B3261E]/30 text-[#B3261E] text-xs flex items-center justify-between">
+          <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-400 text-xs flex items-center justify-between">
             <span>{error}</span>
-            <button onClick={() => loadData()} className="underline font-semibold">Try again</button>
+            <button onClick={() => loadData()} className="underline font-bold">Try again</button>
           </div>
         )}
 
         {/* 4. Table / Cards View Container */}
-        <div className="bg-white rounded-[10px] border border-[#E2D9C8] shadow-[0_1px_2px_rgba(30,42,58,0.06)] overflow-hidden">
+        <div className="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden transition-colors">
           
           {/* Desktop Table (Visible at 720px and above) */}
           <div className="hidden min-[720px]:block overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-[#F3ECE0] sticky top-0 border-b border-[#E2D9C8] text-[#556070] uppercase tracking-wider text-[11px] font-semibold">
+              <thead className="bg-slate-50 dark:bg-[#0B0F19] sticky top-0 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] font-bold">
                 <tr>
                   <th className="py-3 px-4">Name</th>
                   <th className="py-3 px-4">Contact</th>
@@ -427,7 +427,7 @@ export const AdminDashboard = () => {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E2D9C8]">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/10">
                 {isLoading ? (
                   // Skeleton Loading Rows in --paper-2
                   <>
