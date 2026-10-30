@@ -1,19 +1,22 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export const Footer = () => {
+export const Footer = ({ onNavigate }) => {
   const { setIsLoginModalOpen, setCurrentView } = useAuth();
 
-  const handleProgramScroll = (cat) => {
+  const handleProgramClick = (slug) => {
     setCurrentView('home');
-    const url = new URL(window.location.href);
-    url.searchParams.set('category', cat);
-    window.history.pushState({}, '', url);
+    if (onNavigate) {
+      onNavigate(`/programs/${slug}`);
+    }
+  };
 
-    const el = document.getElementById('inquiry');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-      window.dispatchEvent(new Event('categoryChange'));
+  const handleLogoClick = () => {
+    setCurrentView('home');
+    if (onNavigate) {
+      onNavigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
@@ -25,7 +28,10 @@ export const Footer = () => {
           
           {/* Logo & Description */}
           <div className="space-y-3">
-            <span className="font-serif font-bold text-2xl text-[#1E2A3A] tracking-tight block">
+            <span
+              onClick={handleLogoClick}
+              className="font-serif font-bold text-2xl text-[#1E2A3A] tracking-tight block cursor-pointer select-none"
+            >
               K12 Hunar
             </span>
             <p className="text-xs sm:text-sm text-[#556070] leading-relaxed max-w-[280px]">
@@ -41,7 +47,7 @@ export const Footer = () => {
             <ul className="space-y-2 text-xs sm:text-sm text-[#556070]">
               <li>
                 <button
-                  onClick={() => handleProgramScroll('Scholarship')}
+                  onClick={() => handleProgramClick('scholarship')}
                   className="hover:text-[#1E2A3A] transition-colors"
                 >
                   Talent scholarships
@@ -49,7 +55,7 @@ export const Footer = () => {
               </li>
               <li>
                 <button
-                  onClick={() => handleProgramScroll('Concert')}
+                  onClick={() => handleProgramClick('concert')}
                   className="hover:text-[#1E2A3A] transition-colors"
                 >
                   Annual school concerts
@@ -57,7 +63,7 @@ export const Footer = () => {
               </li>
               <li>
                 <button
-                  onClick={() => handleProgramScroll('Admission')}
+                  onClick={() => handleProgramClick('admission')}
                   className="hover:text-[#1E2A3A] transition-colors"
                 >
                   Curriculum admissions
@@ -65,7 +71,7 @@ export const Footer = () => {
               </li>
               <li>
                 <button
-                  onClick={() => handleProgramScroll('General Query')}
+                  onClick={() => handleProgramClick('school-hub')}
                   className="hover:text-[#1E2A3A] transition-colors"
                 >
                   School collaborations

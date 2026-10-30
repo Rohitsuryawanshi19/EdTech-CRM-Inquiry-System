@@ -1,15 +1,28 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export const Navbar = () => {
+export const Navbar = ({ onNavigate }) => {
   const { isAuthenticated, logout, currentView, setCurrentView, setIsLoginModalOpen } = useAuth();
 
   const handleNavClick = (targetId) => {
     setCurrentView('home');
-    setTimeout(() => {
-      const el = document.getElementById(targetId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
+    if (onNavigate) {
+      onNavigate(`/#${targetId}`);
+    } else {
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+  };
+
+  const handleLogoClick = () => {
+    setCurrentView('home');
+    if (onNavigate) {
+      onNavigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   };
 
   return (
@@ -18,7 +31,7 @@ export const Navbar = () => {
         
         {/* Simple Wordmark Logo */}
         <div 
-          onClick={() => setCurrentView('home')}
+          onClick={handleLogoClick}
           className="cursor-pointer select-none"
         >
           <span className="font-serif font-bold text-2xl text-[#1E2A3A] tracking-tight">
