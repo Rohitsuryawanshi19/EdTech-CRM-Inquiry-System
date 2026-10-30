@@ -1,65 +1,100 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('k12_admin_token') || null);
-  const [admin, setAdmin] = useState(() => {
-    const saved = localStorage.getItem('k12_admin_info');
-    return saved ? JSON.parse(saved) : null;
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('k12_admin_token') || null;
+    } catch {
+      return null;
+    }
   });
+
+  const [admin, setAdmin] = useState(() => {
+    try {
+      const saved = localStorage.getItem('k12_admin_info');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'admin'
 
+  const logout = useCallback(() => {
+    setToken(null);
+    setAdmin(null);
+    try {
+      localStorage.removeItem('k12_admin_token');
+      localStorage.removeItem('k12_admin_info');
+    } catch (e) {
+      console.warn('Storage clear error:', e);
+    }
+    setCurrentView('home');
+  }, []);
+
   // Verify token validity on initial mount
   useEffect(() => {
+    let isMounted = true;
+
     const verifyExistingSession = async () => {
-      const storedToken = localStorage.getItem('k12_admin_token');
+      let storedToken = null;
+      try {
+        storedToken = localStorage.getItem('k12_admin_token');
+      } catch (e) {
+        console.warn(e);
+      }
+
       if (!storedToken) {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
         return;
       }
 
       try {
         const response = await api.getMe();
-        if (response.success && response.admin) {
-          setAdmin(response.admin);
-        } else {
-          logout();
+        if (isMounted) {
+          if (response && response.success && response.admin) {
+            setAdmin(response.admin);
+          } else {
+            logout();
+          }
         }
       } catch (err) {
-        // If token expired or invalid, log out
-        logout();
+        if (isMounted) {
+          logout();
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
     verifyExistingSession();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [logout]);
 
   const login = async (email, password) => {
     const response = await api.login(email, password);
-    if (response.success && response.token) {
+    if (response && response.success && response.token) {
       setToken(response.token);
       setAdmin(response.admin);
-      localStorage.setItem('k12_admin_token', response.token);
-      localStorage.setItem('k12_admin_info', JSON.stringify(response.admin));
+      try {
+        localStorage.setItem('k12_admin_token', response.token);
+        localStorage.setItem('k12_admin_info', JSON.stringify(response.admin));
+      } catch (e) {
+        console.warn(e);
+      }
       setIsLoginModalOpen(false);
-      setCurrentView('admin'); // Seamlessly navigate into admin dashboard upon login
+      setCurrentView('admin');
       return response;
     }
-    throw new Error(response.message || 'Authentication failed');
-  };
-
-  const logout = () => {
-    setToken(null);
-    setAdmin(null);
-    localStorage.removeItem('k12_admin_token');
-    localStorage.removeItem('k12_admin_info');
-    setCurrentView('home');
+    throw new Error((response && response.message) || 'Authentication failed');
   };
 
   return (

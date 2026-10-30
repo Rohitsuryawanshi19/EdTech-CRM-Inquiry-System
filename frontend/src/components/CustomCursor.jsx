@@ -7,23 +7,24 @@ export const CustomCursor = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Only enable custom cursor for non-touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
 
     const handleMouseMove = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
 
       const target = e.target;
+      if (!target || !target.tagName) return;
+
       const isClickable =
         target.tagName === 'BUTTON' ||
         target.tagName === 'A' ||
         target.tagName === 'SELECT' ||
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
-        target.closest('button') ||
-        target.closest('a') ||
-        target.getAttribute('role') === 'button';
+        (typeof target.closest === 'function' && (target.closest('button') || target.closest('a'))) ||
+        (typeof target.getAttribute === 'function' && target.getAttribute('role') === 'button');
 
       setIsPointer(!!isClickable);
     };
@@ -53,7 +54,7 @@ export const CustomCursor = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [position, isVisible]);
 
@@ -61,7 +62,6 @@ export const CustomCursor = () => {
 
   return (
     <div className="hidden lg:block pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {/* Outer trailing aura glow */}
       <div
         className={`fixed -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-150 ease-out ${
           isPointer
@@ -74,7 +74,6 @@ export const CustomCursor = () => {
           backdropFilter: 'blur(2px)',
         }}
       />
-      {/* Inner sharp dot */}
       <div
         className={`fixed -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-75 ${
           isPointer ? 'w-2.5 h-2.5 bg-brand-400' : 'w-1.5 h-1.5 bg-cyan-400'
