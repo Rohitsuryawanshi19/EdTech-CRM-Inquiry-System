@@ -163,6 +163,22 @@ export const AdminDashboard = () => {
     document.body.removeChild(link);
   };
 
+  // Helper to color-code the status selector button/chip
+  const getStatusSelectClasses = (status) => {
+    switch (status) {
+      case 'Pending':
+        return 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30';
+      case 'In Progress':
+        return 'bg-blue-50 text-blue-800 border-blue-300 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30';
+      case 'Resolved':
+        return 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30';
+      case 'Closed':
+        return 'bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-500/15 dark:text-stone-300 dark:border-stone-500/30';
+      default:
+        return 'bg-stone-100 text-stone-700 border-stone-300 dark:bg-stone-500/15 dark:text-stone-300 dark:border-stone-500/30';
+    }
+  };
+
   // Status Chip Component
   const renderStatusChip = (status) => {
     switch (status) {
@@ -453,11 +469,11 @@ export const AdminDashboard = () => {
                   </>
                 ) : inquiries.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#556070]">
-                      <p className="font-serif font-bold text-base text-[#1E2A3A] mb-1">
+                    <td colSpan={7} className="py-12 text-center text-slate-500 dark:text-slate-400">
+                      <p className="font-extrabold text-base text-slate-900 dark:text-white mb-1">
                         No inquiries found
                       </p>
-                      <p className="text-xs text-[#556070]">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         Try adjusting search terms or clearing active filters.
                       </p>
                     </td>
@@ -466,36 +482,36 @@ export const AdminDashboard = () => {
                   inquiries.map((item) => (
                     <tr
                       key={item.id}
-                      className="hover:bg-[#FBF7F0] transition-colors"
+                      className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
                     >
                       {/* Name */}
-                      <td className="py-3.5 px-4 font-medium text-[#1E2A3A]">
-                        <span className="block font-semibold">{item.name}</span>
-                        <span className="text-[11px] text-[#556070] line-clamp-1 max-w-[200px]">
+                      <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
+                        <span className="block font-bold">{item.name}</span>
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 max-w-[200px]">
                           {item.message}
                         </span>
                       </td>
 
                       {/* Contact */}
-                      <td className="py-3.5 px-4 text-[#556070]">
-                        <div className="text-xs text-[#1E2A3A]">{item.phone}</div>
-                        <div className="text-[11px] text-[#556070]">{item.email}</div>
+                      <td className="py-3.5 px-4">
+                        <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">{item.phone}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">{item.email}</div>
                       </td>
 
                       {/* User Type */}
-                      <td className="py-3.5 px-4 text-[#1E2A3A]">
+                      <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300 font-medium">
                         {item.user_type}
                       </td>
 
                       {/* Category */}
                       <td className="py-3.5 px-4">
-                        <span className="text-xs text-[#1E2A3A] font-medium">
+                        <span className="text-xs text-slate-700 dark:text-slate-300 font-bold">
                           {item.category}
                         </span>
                       </td>
 
-                      {/* Date (Normal font, no monospace) */}
-                      <td className="py-3.5 px-4 text-[#556070] text-xs">
+                      {/* Date */}
+                      <td className="py-3.5 px-4 text-slate-500 dark:text-slate-400 text-xs">
                         {new Date(item.created_at).toLocaleDateString('en-GB', {
                           day: 'numeric',
                           month: 'short',
@@ -503,18 +519,18 @@ export const AdminDashboard = () => {
                         })}
                       </td>
 
-                      {/* Status Dropdown / Chip */}
+                      {/* Status Dropdown / Chip (Color-coded, no ugly white box) */}
                       <td className="py-3.5 px-4">
                         <select
                           value={item.status}
                           disabled={updatingId === item.id}
                           onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                          className="text-xs font-semibold rounded-[999px] px-2.5 py-1 border border-[#E2D9C8] bg-white cursor-pointer hover:border-[#1F5F4A] transition-colors"
+                          className={`text-xs font-bold rounded-full px-3 py-1 border cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all ${getStatusSelectClasses(item.status)}`}
                         >
-                          <option value="Pending">New</option>
-                          <option value="In Progress">In progress</option>
-                          <option value="Resolved">Resolved</option>
-                          <option value="Closed">Closed</option>
+                          <option value="Pending" className="bg-slate-900 text-amber-300">New</option>
+                          <option value="In Progress" className="bg-slate-900 text-blue-300">In progress</option>
+                          <option value="Resolved" className="bg-slate-900 text-emerald-300">Resolved</option>
+                          <option value="Closed" className="bg-slate-900 text-slate-300">Closed</option>
                         </select>
                       </td>
 
@@ -524,14 +540,14 @@ export const AdminDashboard = () => {
                           <button
                             onClick={() => setSelectedInquiry(item)}
                             title="View inquiry details"
-                            className="p-1.5 rounded-[6px] hover:bg-[#F3ECE0] text-[#556070] hover:text-[#1E2A3A] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(item.id)}
                             title="Delete inquiry"
-                            className="p-1.5 rounded-[6px] hover:bg-[#FDECEA] text-[#556070] hover:text-[#B3261E] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 dark:text-slate-400 hover:text-rose-500 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -626,77 +642,77 @@ export const AdminDashboard = () => {
           onClick={() => setSelectedInquiry(null)}
         >
           <div
-            className="relative w-full max-w-[560px] bg-white rounded-[10px] border border-[#E2D9C8] p-6 sm:p-8 shadow-[0_4px_24px_rgba(30,42,58,0.12)]"
+            className="relative w-full max-w-[560px] bg-white dark:bg-[#121A26] rounded-3xl border border-stone-200/90 dark:border-white/10 p-6 sm:p-8 shadow-2xl transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={() => setSelectedInquiry(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-[#F3ECE0] text-[#556070] hover:text-[#1E2A3A] transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               title="Close"
             >
               <X className="w-4 h-4" />
             </button>
 
             <div className="mb-6">
-              <span className="text-xs uppercase tracking-wider text-[#556070] block mb-1">
+              <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold block mb-1">
                 Inquiry details
               </span>
-              <h2 className="font-serif font-bold text-2xl text-[#1E2A3A]">
+              <h2 className="font-black text-2xl text-slate-900 dark:text-white">
                 {selectedInquiry.name}
               </h2>
             </div>
 
             {/* Fact details grid */}
             <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
-              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
-                <span className="text-[#556070] block mb-0.5">User type</span>
-                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.user_type}</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10">
+                <span className="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">User type</span>
+                <span className="font-bold text-slate-900 dark:text-white">{selectedInquiry.user_type}</span>
               </div>
 
-              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
-                <span className="text-[#556070] block mb-0.5">Topic category</span>
-                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.category}</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10">
+                <span className="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Topic category</span>
+                <span className="font-bold text-slate-900 dark:text-white">{selectedInquiry.category}</span>
               </div>
 
-              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
-                <span className="text-[#556070] block mb-0.5">Phone</span>
-                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.phone}</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10">
+                <span className="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Phone</span>
+                <span className="font-bold text-slate-900 dark:text-white">{selectedInquiry.phone}</span>
               </div>
 
-              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
-                <span className="text-[#556070] block mb-0.5">Email</span>
-                <span className="font-semibold text-[#1E2A3A] truncate block">{selectedInquiry.email}</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10">
+                <span className="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Email</span>
+                <span className="font-bold text-slate-900 dark:text-white truncate block">{selectedInquiry.email}</span>
               </div>
             </div>
 
             {/* Message Body */}
             <div className="mb-6">
-              <span className="form-label mb-1.5">Query message</span>
-              <div className="p-4 rounded-[8px] bg-[#FBF7F0] border border-[#E2D9C8] text-xs sm:text-sm text-[#1E2A3A] leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
+              <span className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Query message</span>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
                 {selectedInquiry.message}
               </div>
             </div>
 
             {/* Update Status inside modal */}
-            <div className="pt-4 border-t border-[#E2D9C8] flex items-center justify-between">
+            <div className="pt-4 border-t border-stone-200/80 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[#556070]">Status:</span>
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Status:</span>
                 <select
                   value={selectedInquiry.status}
                   onChange={(e) => handleStatusChange(selectedInquiry.id, e.target.value)}
-                  className="form-input !h-[34px] !min-h-[34px] !py-1 text-xs"
+                  className={`text-xs font-bold rounded-full px-3 py-1.5 border cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all ${getStatusSelectClasses(selectedInquiry.status)}`}
                 >
-                  <option value="Pending">New</option>
-                  <option value="In Progress">In progress</option>
-                  <option value="Resolved">Resolved</option>
-                  <option value="Closed">Closed</option>
+                  <option value="Pending" className="bg-slate-900 text-amber-300">New</option>
+                  <option value="In Progress" className="bg-slate-900 text-blue-300">In progress</option>
+                  <option value="Resolved" className="bg-slate-900 text-emerald-300">Resolved</option>
+                  <option value="Closed" className="bg-slate-900 text-slate-300">Closed</option>
                 </select>
               </div>
 
               <button
                 onClick={() => setSelectedInquiry(null)}
-                className="btn-secondary !text-xs !py-1.5 !px-4 !min-h-[34px]"
+                className="btn-hero-secondary !text-xs !py-1.5 !px-4 !min-h-[34px]"
               >
                 Close
               </button>
