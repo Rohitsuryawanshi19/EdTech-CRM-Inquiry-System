@@ -1,125 +1,89 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { GraduationCap, ShieldCheck, LogOut, LayoutDashboard, SendHorizontal } from 'lucide-react';
 
 export const Navbar = () => {
-  const { isAuthenticated, admin, logout, currentView, setCurrentView, setIsLoginModalOpen } = useAuth();
+  const { isAuthenticated, logout, currentView, setCurrentView, setIsLoginModalOpen } = useAuth();
+
+  const handleNavClick = (targetId) => {
+    setCurrentView('home');
+    setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#080B13]/80 backdrop-blur-xl transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full bg-white border-b border-[#E2D9C8]">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Simple Wordmark Logo */}
         <div 
           onClick={() => setCurrentView('home')}
-          className="flex items-center gap-3.5 cursor-pointer group select-none"
+          className="cursor-pointer select-none"
         >
-          <div className="relative">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-brand-500/25 group-hover:shadow-brand-500/40 transition-shadow">
-              <div className="w-full h-full bg-[#0d1322] rounded-[15px] flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform duration-300" />
-              </div>
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#080B13]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400 font-['Space_Grotesk']">
-                K12 HUNAR
-              </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30 uppercase tracking-wider">
-                CRM
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 tracking-wide font-medium">EdTech Inquiry Management System</p>
-          </div>
+          <span className="font-serif font-bold text-2xl text-[#1E2A3A] tracking-tight">
+            K12 Hunar
+          </span>
         </div>
 
-        {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-white/5 border border-white/5 backdrop-blur-md">
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8">
           <button
-            onClick={() => {
-              setCurrentView('home');
-              const el = document.getElementById('inquiry-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${
-              currentView === 'home'
-                ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                : 'text-slate-300 hover:text-white hover:bg-white/5'
-            }`}
+            onClick={() => handleNavClick('programs')}
+            className="text-sm font-medium text-[#556070] hover:text-[#1E2A3A] transition-colors"
           >
-            Inquiry Form
+            Programs
           </button>
           
           <button
-            onClick={() => {
-              setCurrentView('home');
-              const el = document.getElementById('programs-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="px-4 py-2 rounded-full text-xs font-semibold tracking-wide text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+            onClick={() => handleNavClick('how-it-works')}
+            className="text-sm font-medium text-[#556070] hover:text-[#1E2A3A] transition-colors"
           >
-            Categories & Programs
+            How it works
+          </button>
+
+          <button
+            onClick={() => handleNavClick('inquiry')}
+            className="text-sm font-medium text-[#556070] hover:text-[#1E2A3A] transition-colors"
+          >
+            Inquiry form
           </button>
 
           {isAuthenticated && (
             <button
               onClick={() => setCurrentView('admin')}
-              className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all ${
-                currentView === 'admin'
-                  ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
-                  : 'text-cyan-300 hover:text-cyan-200 hover:bg-cyan-500/10'
+              className={`text-sm font-medium transition-colors ${
+                currentView === 'admin' ? 'text-[#1F5F4A] font-semibold' : 'text-[#556070] hover:text-[#1E2A3A]'
               }`}
             >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              CRM Dashboard
+              CRM portal
             </button>
           )}
         </nav>
 
-        {/* Right CTA / Admin Auth Status */}
-        <div className="flex items-center gap-3">
+        {/* Right plain text link */}
+        <div className="flex items-center gap-4">
           {isAuthenticated ? (
-            <div className="flex items-center gap-2.5">
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs font-bold text-slate-200">{admin?.name || 'Administrator'}</span>
-                <span className="text-[10px] text-emerald-400 font-mono flex items-center justify-end gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Custom JWT Active
-                </span>
-              </div>
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setCurrentView(currentView === 'admin' ? 'home' : 'admin')}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-600/20 text-brand-300 border border-brand-500/30 hover:bg-brand-600/30 transition-all flex items-center gap-1.5"
+                className="text-sm font-medium text-[#1F5F4A] hover:underline"
               >
-                {currentView === 'admin' ? (
-                  <>
-                    <SendHorizontal className="w-3.5 h-3.5" />
-                    Public Form
-                  </>
-                ) : (
-                  <>
-                    <LayoutDashboard className="w-3.5 h-3.5" />
-                    Dashboard
-                  </>
-                )}
+                {currentView === 'admin' ? 'Public site' : 'Admin portal'}
               </button>
               <button
                 onClick={logout}
-                title="Log out from Admin"
-                className="p-2 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 transition-all"
+                className="text-sm font-medium text-[#556070] hover:text-[#B3261E] transition-colors"
               >
-                <LogOut className="w-4 h-4" />
+                Sign out
               </button>
             </div>
           ) : (
             <button
               onClick={() => setIsLoginModalOpen(true)}
-              className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs tracking-wide text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30 transition-all active:scale-95"
+              className="text-sm font-medium text-[#556070] hover:text-[#1E2A3A] transition-colors underline-offset-4 hover:underline"
             >
-              <ShieldCheck className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
-              Admin Portal Login
+              Admin login
             </button>
           )}
         </div>

@@ -1,68 +1,117 @@
 import React from 'react';
-import { GraduationCap, Shield, Database, Lock, Heart } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export const Footer = () => {
+  const { setIsLoginModalOpen, setCurrentView } = useAuth();
+
+  const handleProgramScroll = (cat) => {
+    setCurrentView('home');
+    const url = new URL(window.location.href);
+    url.searchParams.set('category', cat);
+    window.history.pushState({}, '', url);
+
+    const el = document.getElementById('inquiry');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      window.dispatchEvent(new Event('categoryChange'));
+    }
+  };
+
   return (
-    <footer className="border-t border-white/5 bg-[#07090F] pt-12 pb-8 text-xs text-slate-400">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="border-t border-[#E2D9C8] bg-[#F3ECE0] pt-14 pb-12 text-sm text-[#556070]">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/5">
-          {/* Brand Info */}
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-brand-600/30 border border-brand-500/40 flex items-center justify-center text-cyan-400">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <span className="font-extrabold text-base text-white font-['Space_Grotesk']">
-                K12 HUNAR CRM
-              </span>
-            </div>
-            <p className="text-slate-400 text-xs max-w-sm leading-relaxed">
-              Full-Stack EdTech Inquiry & Student Management Platform. Engineered for K12 Hunar's national talent programs, concerts, scholarships, and institutional outreach.
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-[#E2D9C8]">
+          
+          {/* Logo & Description */}
+          <div className="space-y-3">
+            <span className="font-serif font-bold text-2xl text-[#1E2A3A] tracking-tight block">
+              K12 Hunar
+            </span>
+            <p className="text-xs sm:text-sm text-[#556070] leading-relaxed max-w-[280px]">
+              Supporting school students, parents, and partner institutions through scholarships, performing arts, and learning admissions.
             </p>
           </div>
 
-          {/* Architecture Details */}
+          {/* Column 1: Programs */}
           <div>
-            <h4 className="font-bold text-slate-200 uppercase tracking-wider text-[11px] mb-3">
-              Technical Architecture
+            <h4 className="font-sans font-semibold text-xs text-[#1E2A3A] uppercase tracking-wider mb-3">
+              Programs
             </h4>
-            <ul className="space-y-2 text-slate-400">
-              <li className="flex items-center gap-2">
-                <Database className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Supabase PostgreSQL (pg Pool)</span>
+            <ul className="space-y-2 text-xs sm:text-sm text-[#556070]">
+              <li>
+                <button
+                  onClick={() => handleProgramScroll('Scholarship')}
+                  className="hover:text-[#1E2A3A] transition-colors"
+                >
+                  Talent scholarships
+                </button>
               </li>
-              <li className="flex items-center gap-2">
-                <Lock className="w-3.5 h-3.5 text-brand-400" />
-                <span>Custom JWT & Bcrypt (No Supabase Auth)</span>
+              <li>
+                <button
+                  onClick={() => handleProgramScroll('Concert')}
+                  className="hover:text-[#1E2A3A] transition-colors"
+                >
+                  Annual school concerts
+                </button>
               </li>
-              <li className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Protected Admin Routes</span>
+              <li>
+                <button
+                  onClick={() => handleProgramScroll('Admission')}
+                  className="hover:text-[#1E2A3A] transition-colors"
+                >
+                  Curriculum admissions
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleProgramScroll('General Query')}
+                  className="hover:text-[#1E2A3A] transition-colors"
+                >
+                  School collaborations
+                </button>
               </li>
             </ul>
           </div>
 
-          {/* Assessment Info */}
+          {/* Column 2: Contact */}
           <div>
-            <h4 className="font-bold text-slate-200 uppercase tracking-wider text-[11px] mb-3">
-              Assessment Deliverables
+            <h4 className="font-sans font-semibold text-xs text-[#1E2A3A] uppercase tracking-wider mb-3">
+              Contact
             </h4>
-            <ul className="space-y-2 text-slate-400">
-              <li>✓ Clean Monorepo Architecture</li>
-              <li>✓ Production <code className="text-cyan-300">schema.sql</code></li>
-              <li>✓ Template <code className="text-brand-300">.env.example</code></li>
-              <li>✓ Comprehensive <code className="text-emerald-300">README.md</code></li>
+            <ul className="space-y-2 text-xs sm:text-sm text-[#556070]">
+              <li>Admissions office</li>
+              <li>admissions@k12hunar.org</li>
+              <li>+91 (0) 11 4050 8800</li>
+              <li>Mon–Fri, 9:00 AM – 5:00 PM</li>
             </ul>
           </div>
+
+          {/* Column 3: Administration */}
+          <div>
+            <h4 className="font-sans font-semibold text-xs text-[#1E2A3A] uppercase tracking-wider mb-3">
+              Staff & admin
+            </h4>
+            <ul className="space-y-2 text-xs sm:text-sm text-[#556070]">
+              <li>
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="text-[#1F5F4A] font-semibold hover:underline"
+                >
+                  Staff login &rarr;
+                </button>
+              </li>
+              <li>Counselor portal access</li>
+              <li>Inquiry review desk</li>
+            </ul>
+          </div>
+
         </div>
 
-        {/* Bottom copyright */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
-          <p>© {new Date().getFullYear()} K12 Hunar EdTech. All rights reserved.</p>
-          <div className="flex items-center gap-1">
-            <span>Engineered with passion for K12 Hunar Full-Stack Assessment</span>
-          </div>
+        {/* Bottom copyright line */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#556070]">
+          <p>© {new Date().getFullYear()} K12 Hunar. All rights reserved.</p>
+          <p>Official Education Portal</p>
         </div>
 
       </div>

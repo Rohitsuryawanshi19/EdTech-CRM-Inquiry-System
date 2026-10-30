@@ -1,58 +1,54 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        paper: {
+          DEFAULT: '#FBF7F0',
+          alt: '#F3ECE0',
+        },
+        surface: '#FFFFFF',
+        ink: {
+          DEFAULT: '#1E2A3A',
+          soft: '#556070',
+        },
+        line: '#E2D9C8',
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
+          DEFAULT: '#1F5F4A',
+          dark: '#164636',
         },
-        accent: {
-          cyan: '#06b6d4',
-          violet: '#8b5cf6',
-          fuchsia: '#d946ef',
-          emerald: '#10b981',
-          amber: '#f59e0b',
+        accent: '#D9552B',
+        turmeric: '#E8A317',
+        'slate-blue': '#2F5D8A',
+        chip: {
+          newBg: '#FFF3D6',
+          newText: '#8A5A00',
+          progressBg: '#E4EEF8',
+          progressText: '#1F4E79',
+          resolvedBg: '#E0F0E8',
+          resolvedText: '#1F5F4A',
         },
-        surface: {
-          900: '#0B0F19',
-          800: '#111827',
-          700: '#1F2937',
-          600: '#374151',
+        error: {
+          DEFAULT: '#B3261E',
+          bg: '#FDECEA',
         },
       },
-      animation: {
-        'spin-slow': 'spin 12s linear infinite',
-        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
-        float: 'float 4s ease-in-out infinite',
-        shimmer: 'shimmer 2.5s infinite',
+      fontFamily: {
+        serif: ['Fraunces', 'serif'],
+        sans: ['"Public Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
-      keyframes: {
-        pulseGlow: {
-          '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
-          '50%': { opacity: '0.8', transform: 'scale(1.05)' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' },
-        },
-        shimmer: {
-          '100%': { transform: 'translateX(100%)' },
-        },
+      borderRadius: {
+        card: '10px',
+        input: '8px',
+        btn: '8px',
+        chip: '999px',
       },
-      backdropBlur: {
-        xs: '2px',
+      boxShadow: {
+        warm: '0 1px 2px rgba(30, 42, 58, 0.06), 0 4px 12px rgba(30, 42, 58, 0.05)',
+      },
+      maxWidth: {
+        content: '1120px',
       },
     },
   },
