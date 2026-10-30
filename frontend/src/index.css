@@ -85,7 +85,11 @@
   }
 }
 
-/* Button utility classes */
+/* ==============================================================================
+   RESTRAINED ANIMATIONS & TRANSITIONS (No continuous float/pulse/shimmer)
+   ============================================================================== */
+
+/* Buttons: 150ms background colour transition, translateY(1px) on press */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -102,12 +106,17 @@
   border: 1px solid var(--brand);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 100ms ease;
+  user-select: none;
 }
 
 .btn-primary:hover {
   background-color: var(--brand-dark);
   border-color: var(--brand-dark);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
 }
 
 .btn-primary:focus-visible {
@@ -131,7 +140,8 @@
   border: 1px solid var(--line);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 100ms ease;
+  user-select: none;
 }
 
 .btn-secondary:hover {
@@ -139,9 +149,105 @@
   border-color: var(--ink-soft);
 }
 
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
 .btn-secondary:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
+}
+
+/* Program Cards: on hover lift 3px, image scales 1.04 over 400ms, arrow slides 4px */
+.program-card {
+  transition: transform 250ms ease-out, border-color 200ms ease;
+}
+
+.program-card:hover {
+  transform: translateY(-3px);
+}
+
+.program-card-img {
+  transition: transform 400ms ease-out;
+  transform-origin: center;
+}
+
+.program-card:hover .program-card-img {
+  transform: scale(1.04);
+}
+
+.program-card-arrow {
+  display: inline-block;
+  transition: transform 200ms ease-out;
+}
+
+.program-card:hover .program-card-arrow {
+  transform: translateX(4px);
+}
+
+/* Page Transition: 200ms fade between routes */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: pageFadeIn 200ms ease-out forwards;
+}
+
+/* Scroll Reveal: elements fade in and rise 12px over 400ms ease-out, once, with 60ms stagger */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+  will-change: opacity, transform;
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-1 { transition-delay: 0ms; }
+.stagger-2 { transition-delay: 60ms; }
+.stagger-3 { transition-delay: 120ms; }
+.stagger-4 { transition-delay: 180ms; }
+
+/* Form feedback transitions: simple fade-in, no bouncing */
+@keyframes feedbackFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-feedback-fade {
+  animation: feedbackFadeIn 200ms ease-out forwards;
+}
+
+/* Accordion Transition: 250ms height & opacity */
+.accordion-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease-out, opacity 250ms ease-out;
+  opacity: 0;
+}
+
+.accordion-wrapper.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.accordion-inner {
+  overflow: hidden;
 }
 
 /* Form inputs & selects */
@@ -156,7 +262,7 @@
   font-size: 0.9375rem;
   color: var(--ink);
   box-sizing: border-box;
-  transition: border-color 0.15s ease, outline 0.15s ease;
+  transition: border-color 150ms ease, outline 150ms ease;
 }
 
 .form-input:focus {
@@ -223,4 +329,49 @@
   display: inline-flex;
   align-items: center;
   border: 1px solid rgba(31, 95, 74, 0.15);
+}
+
+/* ==============================================================================
+   ACCESSIBILITY: RESPECT PREFERS-REDUCED-MOTION
+   ============================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .program-card:hover {
+    transform: none !important;
+  }
+
+  .program-card:hover .program-card-img {
+    transform: none !important;
+  }
+
+  .program-card:hover .program-card-arrow {
+    transform: none !important;
+  }
+
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: none !important;
+  }
+
+  .accordion-wrapper {
+    transition: none !important;
+  }
+
+  .page-transition {
+    animation: none !important;
+  }
 }

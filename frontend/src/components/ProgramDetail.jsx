@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Check, ChevronDown, X } from 'lucide-react';
 import { programs } from '../data/programs';
 import ImageWithFallback from './ImageWithFallback';
+import useScrollReveal from '../hooks/useScrollReveal';
 
 // Curated unsplash fallbacks if local files are missing, ensuring high quality visuals
 const PHOTO_FALLBACKS = {
@@ -38,6 +39,8 @@ const PHOTO_FALLBACKS = {
 export const ProgramDetail = ({ program, onNavigate }) => {
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState(null);
+
+  useScrollReveal(program.slug);
 
   // Sync title and scroll to top on mount
   useEffect(() => {
@@ -103,7 +106,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
             {/* Left Column (7 cols) */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 reveal">
               <span
                 className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-[999px] mb-4"
                 style={{ backgroundColor: program.tintBg, color: program.tint }}
@@ -137,7 +140,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
             </div>
 
             {/* Right Column (5 cols) with 12px offset border */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 reveal stagger-2">
               <div className="relative max-w-[460px] mx-auto lg:max-w-none">
                 <div
                   className="absolute inset-0 translate-x-3 translate-y-3 rounded-[10px] border-2 border-[#E2D9C8] pointer-events-none"
@@ -165,7 +168,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-[#E2D9C8]">
             {program.facts.map((fact, index) => (
-              <div key={index} className="pt-4 sm:pt-0 sm:px-4 first:sm:pl-0">
+              <div key={index} className="pt-4 sm:pt-0 sm:px-4 first:sm:pl-0 reveal stagger-1">
                 <span className="block text-xs font-medium uppercase tracking-wider text-[#556070] mb-1">
                   {fact.label}
                 </span>
@@ -184,7 +187,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
             {/* Overview (7 cols) */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 reveal">
               <h2 className="font-serif font-bold text-2xl text-[#1E2A3A] mb-4">
                 Program overview
               </h2>
@@ -196,7 +199,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
             </div>
 
             {/* Highlights Checklist (5 cols) */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 reveal stagger-2">
               <div className="warm-card p-6 sm:p-7 bg-[#F3ECE0]/60">
                 <h3 className="font-serif font-bold text-lg text-[#1E2A3A] mb-4">
                   Key highlights
@@ -221,7 +224,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
       {/* 5. How It Works (Numbered steps) */}
       <section className="py-14 sm:py-16 border-b border-[#E2D9C8] bg-white">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
-          <div className="mb-10">
+          <div className="mb-10 reveal">
             <h2 className="font-serif font-bold text-2xl text-[#1E2A3A] mb-2">
               Application & enrollment process
             </h2>
@@ -231,19 +234,22 @@ export const ProgramDetail = ({ program, onNavigate }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {program.steps.map((st, idx) => (
-              <div key={idx} className="p-5 rounded-[10px] bg-[#FBF7F0] border border-[#E2D9C8]">
-                <div className="w-8 h-8 rounded-[999px] bg-white border border-[#E2D9C8] text-[#1E2A3A] font-serif font-bold text-xs flex items-center justify-center mb-3">
-                  0{idx + 1}
+            {program.steps.map((st, idx) => {
+              const stepStagger = `stagger-${idx + 1}`;
+              return (
+                <div key={idx} className={`p-5 rounded-[10px] bg-[#FBF7F0] border border-[#E2D9C8] reveal ${stepStagger}`}>
+                  <div className="w-8 h-8 rounded-[999px] bg-white border border-[#E2D9C8] text-[#1E2A3A] font-serif font-bold text-xs flex items-center justify-center mb-3">
+                    0{idx + 1}
+                  </div>
+                  <h3 className="font-serif font-bold text-sm text-[#1E2A3A] mb-1.5">
+                    {st.title}
+                  </h3>
+                  <p className="text-xs text-[#556070] leading-relaxed">
+                    {st.text}
+                  </p>
                 </div>
-                <h3 className="font-serif font-bold text-sm text-[#1E2A3A] mb-1.5">
-                  {st.title}
-                </h3>
-                <p className="text-xs text-[#556070] leading-relaxed">
-                  {st.text}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -251,7 +257,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
       {/* 6. Photo Gallery (Mosaic: 1 large + 2 small) with Lightbox */}
       <section className="py-14 sm:py-16 border-b border-[#E2D9C8]">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
-          <div className="mb-8">
+          <div className="mb-8 reveal">
             <h2 className="font-serif font-bold text-2xl text-[#1E2A3A] mb-2">
               Photo gallery
             </h2>
@@ -262,39 +268,39 @@ export const ProgramDetail = ({ program, onNavigate }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Large 1st Image (7 cols) */}
-            <div className="md:col-span-7 cursor-pointer group">
+            <div className="md:col-span-7 cursor-pointer group reveal stagger-1">
               <ImageWithFallback
                 src={program.gallery[0]?.src}
                 fallbackImage={fallbackSet.g1}
                 programName={program.name}
                 alt={program.gallery[0]?.alt}
                 onClick={() => setLightboxImage(program.gallery[0])}
-                className="w-full h-[320px] sm:h-[380px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform group-hover:scale-[1.01]"
+                className="w-full h-[320px] sm:h-[380px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform duration-300 group-hover:scale-[1.01]"
                 aspectRatio="16/10"
               />
             </div>
 
             {/* 2 Smaller Images (5 cols, stacked) */}
             <div className="md:col-span-5 flex flex-col gap-4">
-              <div className="flex-1 cursor-pointer group">
+              <div className="flex-1 cursor-pointer group reveal stagger-2">
                 <ImageWithFallback
                   src={program.gallery[1]?.src}
                   fallbackImage={fallbackSet.g2}
                   programName={program.name}
                   alt={program.gallery[1]?.alt}
                   onClick={() => setLightboxImage(program.gallery[1])}
-                  className="w-full h-[152px] sm:h-[182px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform group-hover:scale-[1.01]"
+                  className="w-full h-[152px] sm:h-[182px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform duration-300 group-hover:scale-[1.01]"
                   aspectRatio="16/10"
                 />
               </div>
-              <div className="flex-1 cursor-pointer group">
+              <div className="flex-1 cursor-pointer group reveal stagger-3">
                 <ImageWithFallback
                   src={program.gallery[2]?.src}
                   fallbackImage={fallbackSet.g3}
                   programName={program.name}
                   alt={program.gallery[2]?.alt}
                   onClick={() => setLightboxImage(program.gallery[2])}
-                  className="w-full h-[152px] sm:h-[182px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform group-hover:scale-[1.01]"
+                  className="w-full h-[152px] sm:h-[182px] object-cover rounded-[10px] border border-[#E2D9C8] transition-transform duration-300 group-hover:scale-[1.01]"
                   aspectRatio="16/10"
                 />
               </div>
@@ -339,10 +345,10 @@ export const ProgramDetail = ({ program, onNavigate }) => {
         </div>
       )}
 
-      {/* 7. FAQ Accessible Accordion (One open at a time) */}
+      {/* 7. FAQ Accessible Accordion (One open at a time with 250ms transition) */}
       <section className="py-14 sm:py-16 border-b border-[#E2D9C8] bg-white">
         <div className="max-w-[800px] mx-auto px-4 sm:px-6">
-          <div className="mb-10 text-center">
+          <div className="mb-10 text-center reveal">
             <h2 className="font-serif font-bold text-2xl text-[#1E2A3A] mb-2">
               Frequently asked questions
             </h2>
@@ -351,7 +357,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
             </p>
           </div>
 
-          <div className="divide-y divide-[#E2D9C8] border-y border-[#E2D9C8]">
+          <div className="divide-y divide-[#E2D9C8] border-y border-[#E2D9C8] reveal">
             {program.faqs.map((faq, idx) => {
               const isOpen = openFaqIndex === idx;
               return (
@@ -372,11 +378,14 @@ export const ProgramDetail = ({ program, onNavigate }) => {
                     />
                   </button>
 
-                  {isOpen && (
-                    <div className="pt-3 pb-1 text-sm text-[#556070] leading-relaxed">
-                      {faq.a}
+                  {/* 250ms Grid Accordion Transition */}
+                  <div className={`accordion-wrapper ${isOpen ? 'is-open' : ''}`}>
+                    <div className="accordion-inner">
+                      <div className="pt-3 pb-1 text-sm text-[#556070] leading-relaxed">
+                        {faq.a}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
@@ -398,7 +407,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
           </p>
           <button
             onClick={handleInquireClick}
-            className="px-6 py-3 rounded-[8px] bg-white text-[#1E2A3A] font-semibold text-sm hover:bg-[#F3ECE0] transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+            className="px-6 py-3 rounded-[8px] bg-white text-[#1E2A3A] font-semibold text-sm hover:bg-[#F3ECE0] transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.15)] active:translate-y-[1px]"
           >
             Inquire about {program.name}
           </button>
@@ -408,7 +417,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
       {/* 9. Other Programs Row (3 remaining cards with lift + zoom) */}
       <section className="py-16 sm:py-20 border-b border-[#E2D9C8] bg-[#FBF7F0]">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
-          <div className="mb-10">
+          <div className="mb-10 reveal">
             <h2 className="font-serif font-bold text-2xl text-[#1E2A3A] mb-2">
               Other programs we support
             </h2>
@@ -420,11 +429,12 @@ export const ProgramDetail = ({ program, onNavigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {otherPrograms.map((other, idx) => {
               const otherFallback = PHOTO_FALLBACKS[other.slug]?.card;
+              const cardStagger = `stagger-${idx + 1}`;
               return (
                 <div
                   key={idx}
                   onClick={() => onNavigate(`/programs/${other.slug}`)}
-                  className={`warm-card rounded-[10px] overflow-hidden border-t-4 ${other.topBorder} cursor-pointer group transition-transform hover:-translate-y-1 bg-white`}
+                  className={`warm-card rounded-[10px] overflow-hidden border-t-4 ${other.topBorder} cursor-pointer group program-card bg-white reveal ${cardStagger}`}
                 >
                   <div className="aspect-[16/10] w-full overflow-hidden bg-[#F3ECE0]">
                     <ImageWithFallback
@@ -432,7 +442,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
                       fallbackImage={otherFallback}
                       programName={other.name}
                       alt={other.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover program-card-img"
                     />
                   </div>
                   <div className="p-5">
@@ -448,8 +458,9 @@ export const ProgramDetail = ({ program, onNavigate }) => {
                     <p className="text-xs text-[#556070] line-clamp-2 mb-3 leading-relaxed">
                       {other.description || other.tagline}
                     </p>
-                    <span className="text-xs font-semibold text-[#1F5F4A] group-hover:underline inline-flex items-center gap-1">
-                      View details &rarr;
+                    <span className="text-xs font-semibold text-[#1F5F4A] inline-flex items-center gap-1">
+                      <span>View details</span>
+                      <span className="program-card-arrow">&rarr;</span>
                     </span>
                   </div>
                 </div>

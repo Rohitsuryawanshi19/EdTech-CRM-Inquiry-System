@@ -1,6 +1,7 @@
 import React from 'react';
 import { programs } from '../data/programs';
 import ImageWithFallback from './ImageWithFallback';
+import useScrollReveal from '../hooks/useScrollReveal';
 
 const STEPS = [
   {
@@ -28,13 +29,15 @@ const PHOTO_CARD_FALLBACKS = {
 };
 
 export const FeaturesSection = ({ onNavigate }) => {
+  useScrollReveal();
+
   return (
     <>
       {/* 1. Programs Section */}
       <section id="programs" className="py-16 sm:py-20 border-b border-[#E2D9C8]">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
           
-          <div className="mb-12">
+          <div className="mb-12 reveal">
             <h2 className="font-serif font-bold text-3xl text-[#1E2A3A] mb-2">
               Programs we support
             </h2>
@@ -43,10 +46,11 @@ export const FeaturesSection = ({ onNavigate }) => {
             </p>
           </div>
 
-          {/* 2x2 Grid (1-col on mobile) with lift + zoom */}
+          {/* 2x2 Grid with 3px lift, 1.04 image scale, 4px arrow slide, and 60ms stagger */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {programs.map((prog, index) => {
               const fallbackUrl = PHOTO_CARD_FALLBACKS[prog.slug];
+              const staggerClass = `stagger-${index + 1}`;
               return (
                 <div
                   key={index}
@@ -55,16 +59,16 @@ export const FeaturesSection = ({ onNavigate }) => {
                       onNavigate(`/programs/${prog.slug}`);
                     }
                   }}
-                  className={`warm-card rounded-[10px] overflow-hidden border-t-4 ${prog.topBorder} cursor-pointer group transition-transform hover:-translate-y-1 bg-white`}
+                  className={`warm-card rounded-[10px] overflow-hidden border-t-4 ${prog.topBorder} cursor-pointer group program-card bg-white reveal ${staggerClass}`}
                 >
-                  {/* 16:10 Photo with smooth zoom */}
+                  {/* 16:10 Photo with smooth 400ms zoom to 1.04 */}
                   <div className="aspect-[16/10] w-full overflow-hidden bg-[#F3ECE0]">
                     <ImageWithFallback
                       src={prog.cardImage}
                       fallbackImage={fallbackUrl}
                       programName={prog.name}
                       alt={prog.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover program-card-img"
                     />
                   </div>
 
@@ -85,8 +89,9 @@ export const FeaturesSection = ({ onNavigate }) => {
                       {prog.overview[0] || prog.tagline}
                     </p>
 
-                    <span className="text-sm font-semibold text-[#1F5F4A] group-hover:underline inline-flex items-center gap-1">
-                      View details &rarr;
+                    <span className="text-sm font-semibold text-[#1F5F4A] inline-flex items-center gap-1">
+                      <span>View details</span>
+                      <span className="program-card-arrow">&rarr;</span>
                     </span>
                   </div>
                 </div>
@@ -101,7 +106,7 @@ export const FeaturesSection = ({ onNavigate }) => {
       <section id="how-it-works" className="py-16 sm:py-20 border-b border-[#E2D9C8] bg-[#F3ECE0]">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
           
-          <div className="mb-12">
+          <div className="mb-12 reveal">
             <h2 className="font-serif font-bold text-3xl text-[#1E2A3A] mb-2">
               How it works
             </h2>
@@ -116,19 +121,22 @@ export const FeaturesSection = ({ onNavigate }) => {
               aria-hidden="true"
             />
 
-            {STEPS.map((item, idx) => (
-              <div key={idx} className="relative z-10">
-                <div className="w-12 h-12 rounded-[999px] bg-white border border-[#E2D9C8] text-[#1E2A3A] font-serif font-bold text-base flex items-center justify-center mb-4 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
-                  {item.step}
+            {STEPS.map((item, idx) => {
+              const stepStagger = `stagger-${idx + 1}`;
+              return (
+                <div key={idx} className={`relative z-10 reveal ${stepStagger}`}>
+                  <div className="w-12 h-12 rounded-[999px] bg-white border border-[#E2D9C8] text-[#1E2A3A] font-serif font-bold text-base flex items-center justify-center mb-4 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+                    {item.step}
+                  </div>
+                  <h3 className="font-serif font-bold text-base text-[#1E2A3A] mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-[#556070] leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#1E2A3A] mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-[#556070] leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>

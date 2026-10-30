@@ -133,7 +133,8 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF7F0] text-[#1E2A3A]">
       <Navbar onNavigate={navigate} />
-      <main className="flex-1">
+      {/* 200ms page route transition fade */}
+      <main key={`${currentPath}-${currentView}`} className="flex-1 page-transition">
         {renderContent()}
       </main>
       <AdminLoginModal />

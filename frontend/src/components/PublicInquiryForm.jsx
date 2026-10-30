@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
+import useScrollReveal from '../hooks/useScrollReveal';
 
 const USER_TYPES = ['Parent', 'Student', 'School'];
 const CATEGORIES = ['Scholarship', 'Concert', 'Admission', 'General Query'];
@@ -18,6 +19,8 @@ export const PublicInquiryForm = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
+
+  useScrollReveal();
 
   // Sync category from URL parameter ?category=...
   const syncCategoryFromUrl = useCallback(() => {
@@ -120,7 +123,7 @@ export const PublicInquiryForm = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column (5 cols): Heading, Paragraph & What happens next */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 reveal">
             <h2 className="font-serif font-bold text-3xl text-[#1E2A3A] mb-4">
               Send us your inquiry
             </h2>
@@ -152,12 +155,12 @@ export const PublicInquiryForm = () => {
           </div>
 
           {/* Right Column (7 cols): The Form in a white bordered card */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 reveal stagger-2">
             <div className="warm-card p-6 sm:p-8">
               
               {submittedSuccess ? (
-                /* Success State */
-                <div className="py-8 text-center">
+                /* Success State: simple fade-in, no bouncing */
+                <div className="py-8 text-center animate-feedback-fade">
                   <div className="w-12 h-12 rounded-[999px] bg-[#E0F0E8] text-[#1F5F4A] flex items-center justify-center mx-auto mb-4 font-serif font-bold text-lg">
                     ✓
                   </div>
@@ -178,9 +181,9 @@ export const PublicInquiryForm = () => {
                 /* The Inquiry Form */
                 <form onSubmit={handleSubmit} className="space-y-5">
                   
-                  {/* Error Alert */}
+                  {/* Error Alert: simple fade-in, no bouncing */}
                   {errorMessage && (
-                    <div className="p-3.5 rounded-[8px] bg-[#FDECEA] border border-[#B3261E]/30 text-[#B3261E] text-xs">
+                    <div className="p-3.5 rounded-[8px] bg-[#FDECEA] border border-[#B3261E]/30 text-[#B3261E] text-xs animate-feedback-fade">
                       {errorMessage}
                     </div>
                   )}
