@@ -167,20 +167,32 @@ export const AdminDashboard = () => {
   const renderStatusChip = (status) => {
     switch (status) {
       case 'Pending':
-        return <span className="chip-new">New</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+            New
+          </span>
+        );
       case 'In Progress':
-        return <span className="chip-progress">In progress</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-500/30">
+            In progress
+          </span>
+        );
       case 'Resolved':
-        return <span className="chip-resolved">Resolved</span>;
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
+            Resolved
+          </span>
+        );
       case 'Closed':
         return (
-          <span className="bg-[#F3ECE0] text-[#556070] rounded-[999px] px-2.5 py-0.5 text-xs font-semibold border border-[#E2D9C8]">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-stone-500/15 text-stone-700 dark:text-stone-300 border border-stone-500/30">
             Closed
           </span>
         );
       default:
         return (
-          <span className="bg-[#F3ECE0] text-[#556070] rounded-[999px] px-2.5 py-0.5 text-xs font-semibold">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-stone-500/15 text-stone-700 dark:text-stone-300 border border-stone-500/30">
             {status}
           </span>
         );

@@ -117,13 +117,13 @@ export const PublicInquiryForm = () => {
   };
 
   return (
-    <section id="inquiry" className="py-20 sm:py-28 border-b border-slate-200 dark:border-white/10 transition-colors">
+    <section id="inquiry" className="py-20 sm:py-28 border-b border-stone-200/80 dark:border-white/10 transition-colors">
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column (5 cols) */}
           <div className="lg:col-span-5 reveal">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-white/5 border border-indigo-200 dark:border-white/10 text-indigo-700 dark:text-cyan-300 text-xs font-bold mb-4 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-amber-800 dark:text-amber-300 text-xs font-bold mb-4 uppercase tracking-wider">
               Get in touch
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-[-0.03em]">
@@ -134,21 +134,21 @@ export const PublicInquiryForm = () => {
               Have questions regarding program eligibility, concert participation, or student admissions? Complete the form and our educational counselor will connect with you directly.
             </p>
 
-            <div className="p-6 sm:p-7 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 shadow-sm">
-              <h3 className="font-extrabold text-base text-slate-900 dark:text-white mb-3">
+            <div className="p-7 sm:p-8 rounded-3xl bg-white dark:bg-[#121A26] border border-stone-200/90 dark:border-white/10 shadow-sm">
+              <h3 className="font-extrabold text-base text-slate-900 dark:text-white mb-4">
                 What happens next
               </h3>
-              <ul className="space-y-3.5 text-sm text-slate-600 dark:text-slate-300">
-                <li className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-indigo-50 dark:bg-cyan-500/10 text-indigo-600 dark:text-cyan-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">1</span>
+              <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                <li className="flex items-start gap-3.5">
+                  <span className="w-6 h-6 rounded-full bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5 border border-amber-500/20">1</span>
                   <span>Your query is logged directly into our Supabase admissions database.</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-indigo-50 dark:bg-cyan-500/10 text-indigo-600 dark:text-cyan-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">2</span>
+                <li className="flex items-start gap-3.5">
+                  <span className="w-6 h-6 rounded-full bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5 border border-amber-500/20">2</span>
                   <span>An educational counselor reviews your request within 24–48 hours.</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="w-5 h-5 rounded-full bg-indigo-50 dark:bg-cyan-500/10 text-indigo-600 dark:text-cyan-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">3</span>
+                <li className="flex items-start gap-3.5">
+                  <span className="w-6 h-6 rounded-full bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5 border border-amber-500/20">3</span>
                   <span>We contact you via email or phone with clear next steps.</span>
                 </li>
               </ul>
@@ -157,7 +157,7 @@ export const PublicInquiryForm = () => {
 
           {/* Right Column (7 cols): The Card */}
           <div className="lg:col-span-7 reveal stagger-2">
-            <div className="p-7 sm:p-9 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 shadow-xl">
+            <div className="p-7 sm:p-9 rounded-3xl bg-white dark:bg-[#121A26] border border-stone-200/90 dark:border-white/10 shadow-xl">
               
               {submittedSuccess ? (
                 <div className="py-8 text-center animate-feedback-fade">
@@ -197,7 +197,7 @@ export const PublicInquiryForm = () => {
                         name="user_type"
                         value={formData.user_type}
                         onChange={handleChange}
-                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
                       >
                         {USER_TYPES.map((type) => (
                           <option key={type} value={type} className="bg-slate-900 text-white">
@@ -216,7 +216,7 @@ export const PublicInquiryForm = () => {
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
                       >
                         {CATEGORIES.map((cat) => (
                           <option key={cat} value={cat} className="bg-slate-900 text-white">
@@ -259,7 +259,7 @@ export const PublicInquiryForm = () => {
                         placeholder="name@example.com"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
                       />
                       {validationErrors.email && (
                         <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.email}</p>
@@ -277,7 +277,7 @@ export const PublicInquiryForm = () => {
                         placeholder="+91 98765 43210"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                        className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
                       />
                       {validationErrors.phone && (
                         <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.phone}</p>
@@ -297,7 +297,7 @@ export const PublicInquiryForm = () => {
                       placeholder="Describe your questions or requirements..."
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full p-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-y transition-all"
+                      className="w-full p-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 resize-y transition-all"
                     />
                     {validationErrors.message && (
                       <p className="text-xs text-rose-500 mt-1 font-medium">{validationErrors.message}</p>

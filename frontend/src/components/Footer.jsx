@@ -22,23 +22,23 @@ export const Footer = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="border-t border-white/10 dark:border-white/10 border-slate-200 bg-[#090D1A] dark:bg-[#090D1A] bg-slate-50 pt-16 pb-12 text-sm text-slate-400 dark:text-slate-400 text-slate-600 transition-colors">
+    <footer className="border-t border-stone-200/80 dark:border-white/10 bg-[#FAF7F2] dark:bg-[#080D14] pt-16 pb-12 text-sm text-slate-600 dark:text-slate-400 transition-colors">
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/10 dark:border-white/10 border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-stone-200/80 dark:border-white/10">
           
           {/* Logo & Description */}
           <div className="space-y-3">
             <div
               onClick={handleLogoClick}
-              className="flex items-center gap-2.5 cursor-pointer select-none"
+              className="flex items-center gap-2.5 cursor-pointer select-none group"
             >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 p-[1px]">
-                <div className="w-full h-full bg-[#0E1324] rounded-[11px] flex items-center justify-center text-cyan-300">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 p-[1px] group-hover:scale-105 transition-transform">
+                <div className="w-full h-full bg-[#0E1B2A] rounded-[11px] flex items-center justify-center text-amber-400">
                   <GraduationCap className="w-4 h-4" />
                 </div>
               </div>
-              <span className="font-serif font-bold text-xl text-slate-100 dark:text-slate-100 text-slate-900 tracking-tight">
+              <span className="font-black text-xl text-slate-900 dark:text-white tracking-tight">
                 K12 Hunar
               </span>
             </div>
@@ -49,14 +49,14 @@ export const Footer = ({ onNavigate }) => {
 
           {/* Column 1: Programs */}
           <div>
-            <h4 className="font-sans font-semibold text-xs text-slate-200 dark:text-slate-200 text-slate-800 uppercase tracking-wider mb-3">
+            <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">
               Programs
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <button
                   onClick={() => handleProgramClick('scholarship')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   Talent scholarships
                 </button>
@@ -64,7 +64,7 @@ export const Footer = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => handleProgramClick('concert')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   Annual school concerts
                 </button>
@@ -72,7 +72,7 @@ export const Footer = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => handleProgramClick('admission')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   Curriculum admissions
                 </button>
@@ -80,7 +80,7 @@ export const Footer = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => handleProgramClick('school-hub')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                 >
                   School collaborations
                 </button>
@@ -90,7 +90,7 @@ export const Footer = ({ onNavigate }) => {
 
           {/* Column 2: Contact */}
           <div>
-            <h4 className="font-sans font-semibold text-xs text-slate-200 dark:text-slate-200 text-slate-800 uppercase tracking-wider mb-3">
+            <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">
               Contact
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
@@ -103,14 +103,14 @@ export const Footer = ({ onNavigate }) => {
 
           {/* Column 3: Administration */}
           <div>
-            <h4 className="font-sans font-semibold text-xs text-slate-200 dark:text-slate-200 text-slate-800 uppercase tracking-wider mb-3">
+            <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">
               Staff & admin
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <button
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="text-cyan-400 font-semibold hover:underline"
+                  className="text-amber-600 dark:text-amber-400 font-bold hover:underline"
                 >
                   Staff login &rarr;
                 </button>

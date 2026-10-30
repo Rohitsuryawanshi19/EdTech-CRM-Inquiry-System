@@ -12,8 +12,8 @@ export const programs = [
     topBorder: 'border-t-[#E8A317]',
     name: 'National Hunar Talent Scholarship',
     tagline: 'Support for students whose talent deserves a chance.',
-    heroImage: '/images/programs/scholarship-hero.jpg',
-    cardImage: '/images/programs/scholarship-card.jpg',
+    heroImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+    cardImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80',
     overview: [
       'The scholarship helps students from Grade 6 to 12 continue their education and develop skills in academics, arts and technology.',
       'Selection is based on a short assessment and a review of the student\'s work, with extra consideration for need.',
@@ -89,8 +89,8 @@ export const programs = [
     topBorder: 'border-t-[#D9552B]',
     name: 'Annual Inter-School Hunar Concert',
     tagline: 'A stage for young musicians, dancers and performers.',
-    heroImage: '/images/programs/concert-hero.jpg',
-    cardImage: '/images/programs/concert-card.jpg',
+    heroImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
+    cardImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
     overview: [
       'A yearly showcase where students from different schools perform together in front of an audience of families, teachers and guests.',
       'Schools can register groups, and individual students can audition for solo slots.',
@@ -166,6 +166,8 @@ export const programs = [
     topBorder: 'border-t-[#1F5F4A]',
     name: 'K12 Curriculum Admissions',
     tagline: 'Clear guidance from first question to first day.',
+    heroImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+    cardImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
     overview: [
       'Learning pathways that combine strong academics with skill-building, competitive exam preparation and mentoring.',
       'Our team helps families understand the process, documents and timelines before they apply.',
@@ -241,6 +243,8 @@ export const programs = [
     topBorder: 'border-t-[#2F5D8A]',
     name: 'School Hub & Partnerships',
     tagline: 'For schools that want to work with us.',
+    heroImage: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80',
+    cardImage: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
     overview: [
       'Partner schools can bring teacher training, skill labs and co-branded student events to their campus.',
       'We discuss your goals first, then suggest a plan that fits your school\'s size and schedule.',

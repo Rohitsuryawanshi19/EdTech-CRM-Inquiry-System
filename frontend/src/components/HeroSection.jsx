@@ -8,24 +8,24 @@ export const HeroSection = ({ onScrollToForm }) => {
   };
 
   return (
-    <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden hero-ambient-bg border-b border-slate-200 dark:border-white/10 transition-colors">
+    <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden hero-ambient-bg border-b border-stone-200/80 dark:border-white/10 transition-colors">
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Column (7 cols): Heading, copy, CTA buttons */}
           <div className="lg:col-span-7">
             
-            {/* Top Pill: ✨ Inquiry desk */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/80 dark:bg-white/5 border border-indigo-200/80 dark:border-white/10 text-indigo-700 dark:text-cyan-300 text-xs font-bold mb-6 shadow-sm backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-cyan-400" />
-              <span>Inquiry Desk & Admissions</span>
+            {/* Top Pill: ✨ Admissions & Inquiry Desk */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/25 dark:border-amber-400/20 text-amber-800 dark:text-amber-300 text-xs font-bold mb-6 shadow-sm backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Admissions & Inquiry Desk</span>
             </div>
 
             {/* Main Headline with right guidance gradient */}
             <h1 className="text-4xl sm:text-5xl lg:text-[3.85rem] font-black text-slate-900 dark:text-white tracking-[-0.03em] leading-[1.08] mb-6">
               Ask once.<br />
               Grow with the{' '}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-indigo-300 dark:via-cyan-300 dark:to-teal-200 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 dark:from-amber-300 dark:via-yellow-200 dark:to-amber-400 bg-clip-text text-transparent">
                 right guidance.
               </span>
             </h1>
@@ -59,9 +59,9 @@ export const HeroSection = ({ onScrollToForm }) => {
           <div className="lg:col-span-5 relative mt-4 lg:mt-0">
             <div className="relative max-w-[420px] mx-auto">
               
-              {/* Floating Card 1 (Top-Left Edge Overlap) */}
-              <div className="hero-floating-card absolute -top-4 -left-4 sm:-left-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 dark:text-amber-300 flex items-center justify-center flex-shrink-0">
+              {/* Floating Card 1 (Top-Left Edge Overlap with Gentle Float Animation) */}
+              <div className="hero-floating-card animate-float-slow absolute -top-5 -left-4 sm:-left-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-300 flex items-center justify-center flex-shrink-0">
                   <GraduationCap className="w-4 h-4" />
                 </div>
                 <div>
@@ -75,7 +75,7 @@ export const HeroSection = ({ onScrollToForm }) => {
               </div>
 
               {/* Framed Classroom Photo */}
-              <div className="rounded-2xl border-2 border-slate-200/80 dark:border-white/15 overflow-hidden shadow-2xl bg-slate-900">
+              <div className="rounded-3xl border-2 border-stone-200/80 dark:border-white/15 overflow-hidden shadow-2xl bg-slate-900">
                 <img
                   src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
                   alt="Teacher guiding students raising their hands in classroom"
@@ -84,9 +84,9 @@ export const HeroSection = ({ onScrollToForm }) => {
                 />
               </div>
 
-              {/* Floating Card 2 (Bottom-Right Edge Overlap) */}
-              <div className="hero-floating-card absolute -bottom-4 -right-4 sm:-right-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 flex items-center justify-center flex-shrink-0">
+              {/* Floating Card 2 (Bottom-Right Edge Overlap with Counter-Float Animation) */}
+              <div className="hero-floating-card animate-float-reverse absolute -bottom-5 -right-4 sm:-right-6 z-20 px-4 py-3 rounded-2xl flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-300 flex items-center justify-center flex-shrink-0">
                   <Music className="w-4 h-4" />
                 </div>
                 <div>

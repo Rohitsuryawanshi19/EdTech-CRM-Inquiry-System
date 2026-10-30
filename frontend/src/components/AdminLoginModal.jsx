@@ -67,23 +67,23 @@ export const AdminLoginModal = () => {
         </div>
 
         {/* Right Column: Form card (7 cols) */}
-        <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-[#111728] dark:bg-[#111728] bg-white transition-colors">
+        <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-white dark:bg-[#121A26] transition-colors">
           <div className="mb-6">
-            <h2 className="font-serif font-bold text-2xl text-slate-100 dark:text-slate-100 text-slate-900">
+            <h2 className="font-black text-2xl text-slate-900 dark:text-white">
               Admin sign in
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 text-slate-600 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
               Enter authorized administrator credentials to review inquiries.
             </p>
           </div>
 
           {/* Quick fill hint for reviewer */}
-          <div className="mb-5 p-3 rounded-xl bg-white/5 dark:bg-white/5 bg-slate-100 border border-white/10 dark:border-white/10 border-slate-200 text-xs text-slate-300 dark:text-slate-300 text-slate-600 flex items-center justify-between gap-2">
+          <div className="mb-5 p-3 rounded-2xl bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/20 dark:border-amber-400/20 text-xs text-slate-700 dark:text-slate-300 flex items-center justify-between gap-2">
             <span className="truncate">Default: admin@k12hunar.com</span>
             <button
               type="button"
               onClick={handleFillDemoCredentials}
-              className="text-xs font-semibold text-cyan-400 hover:underline flex-shrink-0"
+              className="text-xs font-bold text-amber-700 dark:text-amber-300 hover:underline flex-shrink-0"
             >
               Fill demo
             </button>
@@ -91,7 +91,7 @@ export const AdminLoginModal = () => {
 
           {/* Error Alert */}
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs animate-feedback-fade">
+            <div className="mb-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-400 text-xs font-semibold animate-feedback-fade">
               {errorMessage}
             </div>
           )}
@@ -99,7 +99,7 @@ export const AdminLoginModal = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 dark:text-slate-300 text-slate-700 mb-1.5" htmlFor="admin-email">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="admin-email">
                 Email address
               </label>
               <input
@@ -109,12 +109,12 @@ export const AdminLoginModal = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@k12hunar.com"
-                className="w-full h-11 px-3.5 rounded-xl text-sm bg-[#090D1A] dark:bg-[#090D1A] bg-slate-50 border border-white/15 dark:border-white/15 border-slate-300 text-slate-100 dark:text-slate-100 text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 dark:text-slate-300 text-slate-700 mb-1.5" htmlFor="admin-password">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="admin-password">
                 Password
               </label>
               <input
@@ -124,7 +124,7 @@ export const AdminLoginModal = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full h-11 px-3.5 rounded-xl text-sm bg-[#090D1A] dark:bg-[#090D1A] bg-slate-50 border border-white/15 dark:border-white/15 border-slate-300 text-slate-100 dark:text-slate-100 text-slate-900 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full h-12 px-4 rounded-xl text-sm bg-slate-50 dark:bg-[#0A0F16] border border-stone-200/90 dark:border-white/10 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition-all"
               />
             </div>
 

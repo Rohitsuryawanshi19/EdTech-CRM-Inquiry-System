@@ -434,7 +434,7 @@ export const ProgramDetail = ({ program, onNavigate }) => {
                 <div
                   key={idx}
                   onClick={() => onNavigate(`/programs/${other.slug}`)}
-                  className={`rounded-2xl overflow-hidden border-t-4 ${other.topBorder} cursor-pointer group program-card bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/10 shadow-md hover:shadow-xl transition-all duration-300 reveal ${cardStagger}`}
+                  className={`rounded-3xl overflow-hidden border-t-4 ${other.topBorder} cursor-pointer group interactive-card bg-white dark:bg-[#121A26] border border-stone-200/90 dark:border-white/10 shadow-md reveal ${cardStagger}`}
                 >
                   <div className="aspect-[16/10] w-full overflow-hidden bg-slate-900">
                     <ImageWithFallback
@@ -452,13 +452,13 @@ export const ProgramDetail = ({ program, onNavigate }) => {
                     >
                       {other.category}
                     </span>
-                    <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-cyan-400 transition-colors">
+                    <h3 className="font-extrabold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                       {other.name}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">
                       {other.description || other.tagline}
                     </p>
-                    <span className="text-xs font-bold text-indigo-600 dark:text-cyan-400 inline-flex items-center gap-1">
+                    <span className="text-xs font-bold text-amber-700 dark:text-amber-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                       <span>View details</span>
                       <span className="program-card-arrow">&rarr;</span>
                     </span>

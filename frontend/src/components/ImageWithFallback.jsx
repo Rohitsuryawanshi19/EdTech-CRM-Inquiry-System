@@ -26,7 +26,7 @@ export const ImageWithFallback = ({
     }
   };
 
-  const imageSource = triedFallback ? fallbackImage : src;
+  const imageSource = triedFallback ? fallbackImage : (src || fallbackImage);
 
   if (hasError || !imageSource) {
     return (
