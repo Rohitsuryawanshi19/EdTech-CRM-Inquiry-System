@@ -546,7 +546,7 @@ curl -X GET "http://localhost:5001/api/inquiries?category=Scholarship&search=Aar
 
 ---
 
-## 📋 Recruiter Assessment Rubric Compliance
+## 📋Assessment Rubric Compliance
 
 | Rubric Requirement | Implementation Proof / Location | Status |
 |---|---|:---:|
