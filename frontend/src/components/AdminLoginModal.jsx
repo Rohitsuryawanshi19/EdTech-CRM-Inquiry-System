@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, X, Lock, Mail, KeyRound, AlertCircle, Sparkles } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export const AdminLoginModal = () => {
   const { isLoginModalOpen, setIsLoginModalOpen, login } = useAuth();
@@ -23,9 +23,8 @@ export const AdminLoginModal = () => {
 
     try {
       await login(email, password);
-      // login method will close modal and switch to admin dashboard automatically
     } catch (err) {
-      setErrorMessage(err.message || 'Invalid credentials.');
+      setErrorMessage(err.message || 'Invalid email or password.');
     } finally {
       setIsSubmitting(false);
     }
@@ -38,110 +37,108 @@ export const AdminLoginModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-md glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+      <div className="relative w-full max-w-[840px] bg-white rounded-[10px] border border-[#E2D9C8] shadow-[0_4px_24px_rgba(30,42,58,0.12)] overflow-hidden grid grid-cols-1 md:grid-cols-12">
         
-        {/* Top Glow bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 via-cyan-400 to-indigo-500" />
-
-        {/* Close button */}
+        {/* Close Button */}
         <button
           onClick={() => setIsLoginModalOpen(false)}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#556070] hover:text-[#1E2A3A] flex items-center justify-center border border-[#E2D9C8] transition-colors"
+          title="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        {/* Modal Header */}
-        <div className="text-center mb-6">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-600 to-cyan-500 p-[1px] mb-3 shadow-lg shadow-brand-500/30">
-            <div className="w-full h-full bg-[#0d1322] rounded-[15px] flex items-center justify-center">
-              <ShieldCheck className="w-7 h-7 text-cyan-400" />
-            </div>
-          </div>
-          <h3 className="text-xl font-bold text-white">Admin Authentication</h3>
-          <p className="text-xs text-slate-400 mt-1">
-            Custom JWT Protected Route (Supabase PostgreSQL)
-          </p>
-        </div>
-
-        {/* Demo Credentials Quick-Fill Pill for Evaluator */}
-        <div className="mb-5 p-3 rounded-2xl bg-cyan-950/40 border border-cyan-500/20 text-xs text-cyan-300 flex items-center justify-between gap-2">
-          <div>
-            <span className="font-semibold block text-[11px] uppercase tracking-wider text-cyan-400">
-              Evaluator Quick Access
+        {/* Left Column: Photo with dark overlay and one sentence (5 cols) */}
+        <div className="hidden md:flex md:col-span-5 relative bg-[#1E2A3A] text-white p-8 flex-col justify-end overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
+            alt="Classroom education"
+            className="absolute inset-0 w-full h-full object-cover opacity-35"
+          />
+          <div className="relative z-10 space-y-2">
+            <span className="font-serif font-bold text-xl text-white block">
+              K12 Hunar
             </span>
-            <span className="text-slate-300 font-mono text-[11px]">admin@k12hunar.com | Admin@12345</span>
+            <p className="text-xs text-white/90 leading-relaxed font-sans">
+              Centralized admissions, talent scholarships and school inquiry management.
+            </p>
           </div>
-          <button
-            type="button"
-            onClick={handleFillDemoCredentials}
-            className="px-2.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 text-[11px] font-semibold transition-all border border-cyan-500/30 flex items-center gap-1 flex-shrink-0"
-          >
-            <Sparkles className="w-3 h-3" />
-            Auto-Fill
-          </button>
         </div>
 
-        {/* Error Alert */}
-        {errorMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center gap-2.5 text-rose-300 text-xs">
-            <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-slate-400" />
-              Admin Email
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@k12hunar.com"
-              className="glass-input w-full px-4 py-2.5 rounded-xl text-sm"
-            />
+        {/* Right Column: Plain white form card (7 cols) */}
+        <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-white">
+          <div className="mb-6">
+            <h2 className="font-serif font-bold text-2xl text-[#1E2A3A]">
+              Admin sign in
+            </h2>
+            <p className="text-xs sm:text-sm text-[#556070] mt-1">
+              Enter authorized administrator credentials to review inquiries.
+            </p>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-slate-400" />
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="glass-input w-full px-4 py-2.5 rounded-xl text-sm"
-            />
+          {/* Quick fill hint for reviewer */}
+          <div className="mb-5 p-3 rounded-[8px] bg-[#F3ECE0] border border-[#E2D9C8] text-xs text-[#556070] flex items-center justify-between gap-2">
+            <span className="truncate">Default: admin@k12hunar.com</span>
+            <button
+              type="button"
+              onClick={handleFillDemoCredentials}
+              className="text-xs font-semibold text-[#1F5F4A] hover:underline flex-shrink-0"
+            >
+              Fill demo
+            </button>
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 shadow-lg shadow-brand-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                <KeyRound className="w-4 h-4" />
-                <span>Verify & Generate JWT</span>
-              </>
-            )}
-          </button>
-        </form>
+          {/* Error Alert */}
+          {errorMessage && (
+            <div className="mb-4 p-3 rounded-[8px] bg-[#FDECEA] border border-[#B3261E]/30 text-[#B3261E] text-xs">
+              {errorMessage}
+            </div>
+          )}
 
-        <p className="mt-4 text-[11px] text-center text-slate-500">
-          Custom JWT auth with bcrypt password hash. Supabase Auth bypass active.
-        </p>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="form-label" htmlFor="admin-email">
+                Email address
+              </label>
+              <input
+                id="admin-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@k12hunar.com"
+                className="form-input"
+              />
+            </div>
+
+            <div>
+              <label className="form-label" htmlFor="admin-password">
+                Password
+              </label>
+              <input
+                id="admin-password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                className="form-input"
+              />
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-primary w-full"
+              >
+                {isSubmitting ? 'Signing in...' : 'Sign in to portal'}
+              </button>
+            </div>
+          </form>
+        </div>
 
       </div>
     </div>

@@ -3,27 +3,27 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import {
   Search,
-  Filter,
   RefreshCw,
   Download,
   Trash2,
   Eye,
-  CheckCircle,
-  Clock,
-  HelpCircle,
   X,
   Phone,
   Mail,
   User,
   Calendar,
   Layers,
-  ChevronRight,
-  TrendingUp,
 } from 'lucide-react';
 
 const CATEGORIES = ['All', 'Scholarship', 'Concert', 'Admission', 'General Query'];
 const USER_TYPES = ['All', 'Parent', 'Student', 'School'];
-const STATUS_OPTIONS = ['All', 'Pending', 'In Progress', 'Resolved', 'Closed'];
+const STATUS_OPTIONS = [
+  { value: 'All', label: 'All statuses' },
+  { value: 'Pending', label: 'New' },
+  { value: 'In Progress', label: 'In progress' },
+  { value: 'Resolved', label: 'Resolved' },
+  { value: 'Closed', label: 'Closed' },
+];
 
 export const AdminDashboard = () => {
   const { admin, logout, setCurrentView } = useAuth();
@@ -52,7 +52,6 @@ export const AdminDashboard = () => {
     setError('');
 
     try {
-      // Fetch inquiries with active filters
       const [inquiriesRes, statsRes] = await Promise.all([
         api.getInquiries({
           search: searchTerm,
@@ -63,14 +62,14 @@ export const AdminDashboard = () => {
         api.getStats().catch(() => ({ stats: { total: 0, pending: 0, inProgress: 0, resolved: 0 } })),
       ]);
 
-      if (inquiriesRes.success) {
+      if (inquiriesRes && inquiriesRes.success) {
         setInquiries(inquiriesRes.data || []);
       }
-      if (statsRes.success && statsRes.stats) {
+      if (statsRes && statsRes.success && statsRes.stats) {
         setStats(statsRes.stats);
       }
     } catch (err) {
-      setError(err.message || 'Failed to load inquiries. Your JWT session might be expired.');
+      setError(err.message || 'Failed to load inquiries.');
       if (err.status === 401 || err.status === 403) {
         logout();
       }
@@ -81,7 +80,6 @@ export const AdminDashboard = () => {
   }, [searchTerm, selectedCategory, selectedUserType, selectedStatus, logout]);
 
   useEffect(() => {
-    // Debounce search slightly for optimal performance
     const timer = setTimeout(() => {
       loadData();
     }, 250);
@@ -93,15 +91,13 @@ export const AdminDashboard = () => {
     setUpdatingId(id);
     try {
       const response = await api.updateInquiryStatus(id, newStatus);
-      if (response.success) {
-        // Update local state
+      if (response && response.success) {
         setInquiries((prev) =>
           prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
         );
         if (selectedInquiry && selectedInquiry.id === id) {
           setSelectedInquiry((prev) => ({ ...prev, status: newStatus }));
         }
-        // Refresh stats
         const statsRes = await api.getStats().catch(() => null);
         if (statsRes?.success) setStats(statsRes.stats);
       }
@@ -114,11 +110,11 @@ export const AdminDashboard = () => {
 
   // Handle Delete Inquiry
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this inquiry record?')) return;
+    if (!window.confirm('Delete this inquiry record permanently?')) return;
 
     try {
       const response = await api.deleteInquiry(id);
-      if (response.success) {
+      if (response && response.success) {
         setInquiries((prev) => prev.filter((item) => item.id !== id));
         if (selectedInquiry && selectedInquiry.id === id) {
           setSelectedInquiry(null);
@@ -127,6 +123,14 @@ export const AdminDashboard = () => {
     } catch (err) {
       alert('Delete failed: ' + err.message);
     }
+  };
+
+  // Clear filters
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('All');
+    setSelectedUserType('All');
+    setSelectedStatus('All');
   };
 
   // Export current table view to CSV
@@ -144,8 +148,8 @@ export const AdminDashboard = () => {
       `"${i.email}"`,
       `"${i.user_type}"`,
       `"${i.category}"`,
-      `"${i.status}"`,
-      `"${new Date(i.created_at).toLocaleString()}"`,
+      `"${i.status === 'Pending' ? 'New' : i.status}"`,
+      `"${new Date(i.created_at).toLocaleDateString()}"`,
       `"${i.message.replace(/"/g, '""')}"`,
     ]);
 
@@ -159,475 +163,528 @@ export const AdminDashboard = () => {
     document.body.removeChild(link);
   };
 
-  const getStatusBadgeClass = (status) => {
+  // Status Chip Component
+  const renderStatusChip = (status) => {
     switch (status) {
       case 'Pending':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+        return <span className="chip-new">New</span>;
       case 'In Progress':
-        return 'bg-blue-500/10 text-cyan-400 border-cyan-500/20';
+        return <span className="chip-progress">In progress</span>;
       case 'Resolved':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        return <span className="chip-resolved">Resolved</span>;
       case 'Closed':
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return (
+          <span className="bg-[#F3ECE0] text-[#556070] rounded-[999px] px-2.5 py-0.5 text-xs font-semibold border border-[#E2D9C8]">
+            Closed
+          </span>
+        );
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return (
+          <span className="bg-[#F3ECE0] text-[#556070] rounded-[999px] px-2.5 py-0.5 text-xs font-semibold">
+            {status}
+          </span>
+        );
     }
   };
 
-  const getUserTypeBadgeClass = (type) => {
-    switch (type) {
-      case 'Parent':
-        return 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20';
-      case 'Student':
-        return 'bg-cyan-500/10 text-cyan-300 border-cyan-500/20';
-      case 'School':
-        return 'bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/20';
-      default:
-        return 'bg-slate-500/10 text-slate-300 border-slate-500/20';
-    }
-  };
+  const hasActiveFilters =
+    searchTerm || selectedCategory !== 'All' || selectedUserType !== 'All' || selectedStatus !== 'All';
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#FBF7F0] text-[#1E2A3A]">
       
-      {/* Top Banner / Breadcrumb */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5 mb-8">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <span onClick={() => setCurrentView('home')} className="hover:text-cyan-400 cursor-pointer">
-              Home
+      {/* 1. Dashboard Top Bar */}
+      <header className="bg-white border-b border-[#E2D9C8] sticky top-0 z-30">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span
+              onClick={() => setCurrentView('home')}
+              className="font-serif font-bold text-xl text-[#1E2A3A] cursor-pointer"
+            >
+              K12 Hunar
             </span>
-            <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-cyan-400 font-semibold">Admin CRM Dashboard</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Inquiry Management Hub
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Real-time PostgreSQL data view with category filters, user-type segmentation, and custom JWT security.
-          </p>
-        </div>
-
-        {/* Action Controls */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => loadData(true)}
-            disabled={isRefreshing}
-            className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 transition-all flex items-center gap-2"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>Refresh</span>
-          </button>
-
-          <button
-            onClick={handleExportCSV}
-            className="px-3.5 py-2 rounded-xl bg-brand-600/20 hover:bg-brand-600/30 border border-brand-500/30 text-xs font-semibold text-brand-300 transition-all flex items-center gap-2"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Export CSV</span>
-          </button>
-        </div>
-      </div>
-
-      {/* KPI Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="glass-card p-5 rounded-2xl border border-white/5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Inquiries</span>
-            <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-400">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-white">{stats.total || inquiries.length}</p>
-          <span className="text-[11px] text-slate-500">Live submissions recorded</span>
-        </div>
-
-        <div className="glass-card p-5 rounded-2xl border border-white/5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider">Pending Action</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-amber-300">{stats.pending}</p>
-          <span className="text-[11px] text-slate-500">Awaiting counselor review</span>
-        </div>
-
-        <div className="glass-card p-5 rounded-2xl border border-white/5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">In Progress</span>
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-              <Layers className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-cyan-300">{stats.inProgress}</p>
-          <span className="text-[11px] text-slate-500">Under active discussion</span>
-        </div>
-
-        <div className="glass-card p-5 rounded-2xl border border-white/5">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Resolved</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-              <CheckCircle className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-extrabold text-emerald-300">{stats.resolved}</p>
-          <span className="text-[11px] text-slate-500">Admission / query fulfilled</span>
-        </div>
-      </div>
-
-      {/* Mandatory Filters & Search Control Bar */}
-      <div className="glass-panel p-5 rounded-2xl mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-          
-          {/* Search bar for Name or Phone Number */}
-          <div className="relative">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Search Candidate
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search by Name or Phone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="glass-input w-full pl-9 pr-3 py-2 rounded-xl text-xs"
-              />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
+            <span className="text-xs px-2 py-0.5 rounded-[999px] bg-[#F3ECE0] text-[#556070] border border-[#E2D9C8]">
+              Admin desk
+            </span>
           </div>
 
-          {/* Filter by Category */}
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Filter by Category
-            </label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="glass-input w-full px-3 py-2 rounded-xl text-xs font-medium cursor-pointer"
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat} className="bg-slate-900 text-slate-200">
-                  {cat === 'All' ? 'All Categories' : cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Filter by User Type */}
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Filter by User Type
-            </label>
-            <select
-              value={selectedUserType}
-              onChange={(e) => setSelectedUserType(e.target.value)}
-              className="glass-input w-full px-3 py-2 rounded-xl text-xs font-medium cursor-pointer"
-            >
-              {USER_TYPES.map((type) => (
-                <option key={type} value={type} className="bg-slate-900 text-slate-200">
-                  {type === 'All' ? 'All User Types' : type}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Filter by Status */}
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Status Pipeline
-            </label>
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="glass-input w-full px-3 py-2 rounded-xl text-xs font-medium cursor-pointer"
-            >
-              {STATUS_OPTIONS.map((st) => (
-                <option key={st} value={st} className="bg-slate-900 text-slate-200">
-                  {st === 'All' ? 'All Statuses' : st}
-                </option>
-              ))}
-            </select>
-          </div>
-
-        </div>
-
-        {/* Active Filter Chips */}
-        {(searchTerm || selectedCategory !== 'All' || selectedUserType !== 'All' || selectedStatus !== 'All') && (
-          <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-slate-400 text-[11px]">Active Filters:</span>
-            {searchTerm && (
-              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 text-[11px] flex items-center gap-1">
-                Search: "{searchTerm}"
-                <X className="w-3 h-3 cursor-pointer" onClick={() => setSearchTerm('')} />
-              </span>
-            )}
-            {selectedCategory !== 'All' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-brand-500/10 text-brand-300 border border-brand-500/20 text-[11px] flex items-center gap-1">
-                Category: {selectedCategory}
-                <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedCategory('All')} />
-              </span>
-            )}
-            {selectedUserType !== 'All' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-fuchsia-500/10 text-fuchsia-300 border border-fuchsia-500/20 text-[11px] flex items-center gap-1">
-                User: {selectedUserType}
-                <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedUserType('All')} />
-              </span>
-            )}
-            {selectedStatus !== 'All' && (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-[11px] flex items-center gap-1">
-                Status: {selectedStatus}
-                <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedStatus('All')} />
-              </span>
-            )}
+          <div className="flex items-center gap-5 text-sm">
+            <span className="hidden sm:inline text-xs text-[#556070]">
+              {admin?.email || 'admin@k12hunar.com'}
+            </span>
             <button
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedCategory('All');
-                setSelectedUserType('All');
-                setSelectedStatus('All');
-              }}
-              className="text-[11px] text-slate-400 hover:text-white underline ml-2"
+              onClick={() => setCurrentView('home')}
+              className="text-xs font-medium text-[#1F5F4A] hover:underline"
             >
-              Reset all
+              View public site
             </button>
+            <button
+              onClick={logout}
+              className="text-xs font-medium text-[#556070] hover:text-[#B3261E] transition-colors"
+            >
+              Log out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Container */}
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        
+        {/* Title Bar & Actions */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="font-serif font-bold text-3xl text-[#1E2A3A]">
+              Inquiries
+            </h1>
+            <p className="text-sm text-[#556070] mt-1">
+              Review and manage incoming submissions from parents, students, and schools.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => loadData(true)}
+              disabled={isRefreshing}
+              className="btn-secondary !text-xs !py-2 !px-3.5 !min-h-[38px]"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>Refresh</span>
+            </button>
+
+            <button
+              onClick={handleExportCSV}
+              className="btn-secondary !text-xs !py-2 !px-3.5 !min-h-[38px]"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 2. 4 Summary Tiles (Total, New, In progress, Resolved) with 4px left border */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          
+          {/* Tile 1: Total */}
+          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1E2A3A] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+            <span className="block text-xs font-medium text-[#556070] mb-1">
+              Total inquiries
+            </span>
+            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+              {stats.total || inquiries.length}
+            </span>
+          </div>
+
+          {/* Tile 2: New (Pending) */}
+          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#E8A317] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+            <span className="block text-xs font-medium text-[#556070] mb-1">
+              New
+            </span>
+            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+              {stats.pending}
+            </span>
+          </div>
+
+          {/* Tile 3: In progress */}
+          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1F4E79] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+            <span className="block text-xs font-medium text-[#556070] mb-1">
+              In progress
+            </span>
+            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+              {stats.inProgress}
+            </span>
+          </div>
+
+          {/* Tile 4: Resolved */}
+          <div className="bg-white rounded-[10px] border border-[#E2D9C8] border-l-4 border-l-[#1F5F4A] p-5 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+            <span className="block text-xs font-medium text-[#556070] mb-1">
+              Resolved
+            </span>
+            <span className="font-serif font-bold text-3xl text-[#1E2A3A]">
+              {stats.resolved}
+            </span>
+          </div>
+
+        </div>
+
+        {/* 3. Filter Row */}
+        <div className="bg-white rounded-[10px] border border-[#E2D9C8] p-5 mb-6 shadow-[0_1px_2px_rgba(30,42,58,0.06)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            
+            {/* Search by Name or Phone */}
+            <div>
+              <label className="form-label" htmlFor="filter-search">
+                Search by name or phone
+              </label>
+              <div className="relative">
+                <input
+                  id="filter-search"
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="form-input !h-[40px] !min-h-[40px] pl-9 text-xs"
+                />
+                <Search className="w-3.5 h-3.5 text-[#556070] absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="form-label" htmlFor="filter-category">
+                Category
+              </label>
+              <select
+                id="filter-category"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="form-input !h-[40px] !min-h-[40px] text-xs"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat === 'All' ? 'All categories' : cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* User Type */}
+            <div>
+              <label className="form-label" htmlFor="filter-user-type">
+                User type
+              </label>
+              <select
+                id="filter-user-type"
+                value={selectedUserType}
+                onChange={(e) => setSelectedUserType(e.target.value)}
+                className="form-input !h-[40px] !min-h-[40px] text-xs"
+              >
+                {USER_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type === 'All' ? 'All user types' : type}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status */}
+            <div>
+              <label className="form-label" htmlFor="filter-status">
+                Status
+              </label>
+              <select
+                id="filter-status"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="form-input !h-[40px] !min-h-[40px] text-xs"
+              >
+                {STATUS_OPTIONS.map((st) => (
+                  <option key={st.value} value={st.value}>
+                    {st.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+          </div>
+
+          {/* Clear Filters Link */}
+          {hasActiveFilters && (
+            <div className="mt-4 pt-3 border-t border-[#E2D9C8] flex items-center justify-between text-xs text-[#556070]">
+              <span>Active filters applied</span>
+              <button
+                onClick={handleClearFilters}
+                className="text-xs font-semibold text-[#D9552B] hover:underline"
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 p-4 rounded-[8px] bg-[#FDECEA] border border-[#B3261E]/30 text-[#B3261E] text-xs flex items-center justify-between">
+            <span>{error}</span>
+            <button onClick={() => loadData()} className="underline font-semibold">Try again</button>
           </div>
         )}
-      </div>
 
-      {/* Error state */}
-      {error && (
-        <div className="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center justify-between">
-          <span>{error}</span>
-          <button onClick={() => loadData()} className="underline font-semibold">Try again</button>
-        </div>
-      )}
-
-      {/* Main Inquiries Table View */}
-      <div className="glass-panel rounded-3xl overflow-hidden border border-white/5">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-white/10 bg-white/[0.02] text-slate-400 uppercase tracking-wider text-[11px] font-bold">
-                <th className="py-4 px-5">Candidate / Details</th>
-                <th className="py-4 px-4">Contact</th>
-                <th className="py-4 px-4">User Type</th>
-                <th className="py-4 px-4">Category</th>
-                <th className="py-4 px-4">Submission Date</th>
-                <th className="py-4 px-4">Status Pipeline</th>
-                <th className="py-4 px-5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {isLoading ? (
+        {/* 4. Table / Cards View Container */}
+        <div className="bg-white rounded-[10px] border border-[#E2D9C8] shadow-[0_1px_2px_rgba(30,42,58,0.06)] overflow-hidden">
+          
+          {/* Desktop Table (Visible at 720px and above) */}
+          <div className="hidden min-[720px]:block overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead className="bg-[#F3ECE0] sticky top-0 border-b border-[#E2D9C8] text-[#556070] uppercase tracking-wider text-[11px] font-semibold">
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-slate-400">
-                    <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                    <span>Querying Supabase PostgreSQL...</span>
-                  </td>
+                  <th className="py-3 px-4">Name</th>
+                  <th className="py-3 px-4">Contact</th>
+                  <th className="py-3 px-4">User type</th>
+                  <th className="py-3 px-4">Category</th>
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
-              ) : inquiries.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-16 text-center text-slate-400">
-                    <HelpCircle className="w-10 h-10 mx-auto mb-3 text-slate-600" />
-                    <p className="text-sm font-semibold text-slate-300">No Inquiries Found</p>
-                    <p className="text-xs text-slate-500 mt-1">Try clearing filters or submit a new inquiry from the home form.</p>
-                  </td>
-                </tr>
-              ) : (
-                inquiries.map((item) => (
-                  <tr key={item.id} className="hover:bg-white/[0.03] transition-colors group">
-                    
-                    {/* Name & Query Preview */}
-                    <td className="py-4 px-5">
-                      <div className="flex items-start gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-brand-500/20 text-brand-300 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
-                          {item.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <span className="font-bold text-slate-100 text-sm block group-hover:text-cyan-300 transition-colors">
-                            {item.name}
-                          </span>
-                          <span className="text-[11px] text-slate-400 line-clamp-1 max-w-xs mt-0.5">
-                            {item.message}
-                          </span>
-                        </div>
-                      </div>
+              </thead>
+              <tbody className="divide-y divide-[#E2D9C8]">
+                {isLoading ? (
+                  // Skeleton Loading Rows in --paper-2
+                  <>
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <tr key={n}>
+                        <td colSpan={7} className="py-4 px-4">
+                          <div className="h-4 bg-[#F3ECE0] animate-pulse rounded w-full" />
+                        </td>
+                      </tr>
+                    ))}
+                  </>
+                ) : inquiries.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-[#556070]">
+                      <p className="font-serif font-bold text-base text-[#1E2A3A] mb-1">
+                        No inquiries found
+                      </p>
+                      <p className="text-xs text-[#556070]">
+                        Try adjusting search terms or clearing active filters.
+                      </p>
                     </td>
+                  </tr>
+                ) : (
+                  inquiries.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="hover:bg-[#FBF7F0] transition-colors"
+                    >
+                      {/* Name */}
+                      <td className="py-3.5 px-4 font-medium text-[#1E2A3A]">
+                        <span className="block font-semibold">{item.name}</span>
+                        <span className="text-[11px] text-[#556070] line-clamp-1 max-w-[200px]">
+                          {item.message}
+                        </span>
+                      </td>
 
-                    {/* Contact (Phone & Email) */}
-                    <td className="py-4 px-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 text-slate-200 font-mono text-[11px]">
-                          <Phone className="w-3 h-3 text-cyan-400" />
-                          <span>{item.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
-                          <Mail className="w-3 h-3 text-slate-500" />
-                          <span className="truncate max-w-[160px]">{item.email}</span>
-                        </div>
-                      </div>
-                    </td>
+                      {/* Contact */}
+                      <td className="py-3.5 px-4 text-[#556070]">
+                        <div className="text-xs text-[#1E2A3A]">{item.phone}</div>
+                        <div className="text-[11px] text-[#556070]">{item.email}</div>
+                      </td>
 
-                    {/* User Type Badge */}
-                    <td className="py-4 px-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${getUserTypeBadgeClass(item.user_type)}`}>
+                      {/* User Type */}
+                      <td className="py-3.5 px-4 text-[#1E2A3A]">
                         {item.user_type}
-                      </span>
-                    </td>
+                      </td>
 
-                    {/* Category Badge */}
-                    <td className="py-4 px-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 font-medium text-[11px]">
-                        {item.category}
-                      </span>
-                    </td>
+                      {/* Category */}
+                      <td className="py-3.5 px-4">
+                        <span className="text-xs text-[#1E2A3A] font-medium">
+                          {item.category}
+                        </span>
+                      </td>
 
-                    {/* Submission Date */}
-                    <td className="py-4 px-4 text-slate-400 font-mono text-[11px]">
-                      {new Date(item.created_at).toLocaleDateString('en-US', {
-                        month: 'short',
+                      {/* Date (Normal font, no monospace) */}
+                      <td className="py-3.5 px-4 text-[#556070] text-xs">
+                        {new Date(item.created_at).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </td>
+
+                      {/* Status Dropdown / Chip */}
+                      <td className="py-3.5 px-4">
+                        <select
+                          value={item.status}
+                          disabled={updatingId === item.id}
+                          onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                          className="text-xs font-semibold rounded-[999px] px-2.5 py-1 border border-[#E2D9C8] bg-white cursor-pointer hover:border-[#1F5F4A] transition-colors"
+                        >
+                          <option value="Pending">New</option>
+                          <option value="In Progress">In progress</option>
+                          <option value="Resolved">Resolved</option>
+                          <option value="Closed">Closed</option>
+                        </select>
+                      </td>
+
+                      {/* Plain Icon Actions with tooltips */}
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="inline-flex items-center gap-1">
+                          <button
+                            onClick={() => setSelectedInquiry(item)}
+                            title="View inquiry details"
+                            className="p-1.5 rounded-[6px] hover:bg-[#F3ECE0] text-[#556070] hover:text-[#1E2A3A] transition-colors"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            title="Delete inquiry"
+                            className="p-1.5 rounded-[6px] hover:bg-[#FDECEA] text-[#556070] hover:text-[#B3261E] transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Stacked Cards (Below 720px) */}
+          <div className="block min-[720px]:hidden p-4 space-y-4">
+            {isLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="h-24 bg-[#F3ECE0] animate-pulse rounded-[8px]" />
+                ))}
+              </div>
+            ) : inquiries.length === 0 ? (
+              <div className="py-8 text-center text-[#556070]">
+                <p className="font-serif font-bold text-sm text-[#1E2A3A]">No inquiries found</p>
+              </div>
+            ) : (
+              inquiries.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-[8px] border border-[#E2D9C8] bg-[#FBF7F0] space-y-2.5"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-semibold text-sm text-[#1E2A3A]">{item.name}</h3>
+                      <span className="text-xs text-[#556070]">{item.user_type} · {item.category}</span>
+                    </div>
+                    {renderStatusChip(item.status)}
+                  </div>
+
+                  <p className="text-xs text-[#556070] line-clamp-2 leading-relaxed">
+                    {item.message}
+                  </p>
+
+                  <div className="pt-2 border-t border-[#E2D9C8] flex items-center justify-between text-xs text-[#556070]">
+                    <span>
+                      {new Date(item.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',
+                        month: 'short',
                         year: 'numeric',
                       })}
-                    </td>
+                    </span>
 
-                    {/* Status Select with direct update */}
-                    <td className="py-4 px-4">
-                      <select
-                        value={item.status}
-                        disabled={updatingId === item.id}
-                        onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                        className={`text-[11px] font-semibold rounded-lg px-2.5 py-1 border cursor-pointer appearance-none transition-all ${getStatusBadgeClass(item.status)}`}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setSelectedInquiry(item)}
+                        className="p-1 hover:text-[#1E2A3A]"
+                        title="View details"
                       >
-                        <option value="Pending" className="bg-slate-900 text-amber-300">Pending</option>
-                        <option value="In Progress" className="bg-slate-900 text-cyan-300">In Progress</option>
-                        <option value="Resolved" className="bg-slate-900 text-emerald-300">Resolved</option>
-                        <option value="Closed" className="bg-slate-900 text-slate-400">Closed</option>
-                      </select>
-                    </td>
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="p-1 hover:text-[#B3261E]"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
 
-                    {/* Actions */}
-                    <td className="py-4 px-5 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => setSelectedInquiry(item)}
-                          title="View Full Inquiry Detail"
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          title="Delete Record"
-                          className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+          {/* Table Footer */}
+          <div className="py-3 px-4 bg-[#F3ECE0]/50 border-t border-[#E2D9C8] text-xs text-[#556070] flex items-center justify-between">
+            <span>
+              Showing <strong>{inquiries.length}</strong> inquiries
+            </span>
+            <span>Database connected</span>
+          </div>
 
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
         </div>
 
-        {/* Table Footer info */}
-        <div className="p-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
-          <span>
-            Showing <strong className="text-white">{inquiries.length}</strong> matching inquiry records
-          </span>
-          <span className="text-[11px] text-slate-500">
-            Powered by Supabase PostgreSQL pg pool
-          </span>
-        </div>
       </div>
 
-      {/* Inquiry Detail Modal */}
+      {/* 5. Detail Modal (Plain white panel with 1px border) */}
       {selectedInquiry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-lg glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
+        <div
+          role="dialog"
+          aria-label="Inquiry detail view"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
+          onClick={() => setSelectedInquiry(null)}
+        >
+          <div
+            className="relative w-full max-w-[560px] bg-white rounded-[10px] border border-[#E2D9C8] p-6 sm:p-8 shadow-[0_4px_24px_rgba(30,42,58,0.12)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
             <button
               onClick={() => setSelectedInquiry(null)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-[#F3ECE0] text-[#556070] hover:text-[#1E2A3A] transition-colors"
+              title="Close"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-300 flex items-center justify-center font-bold text-lg">
-                {selectedInquiry.name.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-white">{selectedInquiry.name}</h3>
-                <p className="text-xs text-slate-400">ID: {selectedInquiry.id}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span className="text-slate-400 block mb-1">User Type</span>
-                <span className={`px-2 py-0.5 rounded-md font-semibold text-[11px] border ${getUserTypeBadgeClass(selectedInquiry.user_type)}`}>
-                  {selectedInquiry.user_type}
-                </span>
-              </div>
-
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span className="text-slate-400 block mb-1">Category</span>
-                <span className="font-semibold text-slate-200">{selectedInquiry.category}</span>
-              </div>
-
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span className="text-slate-400 block mb-1">Contact Phone</span>
-                <span className="font-mono text-cyan-300 font-semibold">{selectedInquiry.phone}</span>
-              </div>
-
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span className="text-slate-400 block mb-1">Email Address</span>
-                <span className="text-slate-200 truncate block">{selectedInquiry.email}</span>
-              </div>
-            </div>
-
-            {/* Message Details */}
             <div className="mb-6">
-              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-2">
-                Inquiry Message / Statement:
+              <span className="text-xs uppercase tracking-wider text-[#556070] block mb-1">
+                Inquiry details
               </span>
-              <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
+              <h2 className="font-serif font-bold text-2xl text-[#1E2A3A]">
+                {selectedInquiry.name}
+              </h2>
+            </div>
+
+            {/* Fact details grid */}
+            <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
+              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
+                <span className="text-[#556070] block mb-0.5">User type</span>
+                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.user_type}</span>
+              </div>
+
+              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
+                <span className="text-[#556070] block mb-0.5">Topic category</span>
+                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.category}</span>
+              </div>
+
+              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
+                <span className="text-[#556070] block mb-0.5">Phone</span>
+                <span className="font-semibold text-[#1E2A3A]">{selectedInquiry.phone}</span>
+              </div>
+
+              <div className="p-3 rounded-[8px] bg-[#F3ECE0]/60 border border-[#E2D9C8]">
+                <span className="text-[#556070] block mb-0.5">Email</span>
+                <span className="font-semibold text-[#1E2A3A] truncate block">{selectedInquiry.email}</span>
+              </div>
+            </div>
+
+            {/* Message Body */}
+            <div className="mb-6">
+              <span className="form-label mb-1.5">Query message</span>
+              <div className="p-4 rounded-[8px] bg-[#FBF7F0] border border-[#E2D9C8] text-xs sm:text-sm text-[#1E2A3A] leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
                 {selectedInquiry.message}
               </div>
             </div>
 
-            {/* Change Status inside Modal */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+            {/* Update Status inside modal */}
+            <div className="pt-4 border-t border-[#E2D9C8] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-400">Update Status:</span>
+                <span className="text-xs text-[#556070]">Status:</span>
                 <select
                   value={selectedInquiry.status}
                   onChange={(e) => handleStatusChange(selectedInquiry.id, e.target.value)}
-                  className={`text-xs font-semibold rounded-lg px-3 py-1.5 border cursor-pointer ${getStatusBadgeClass(selectedInquiry.status)}`}
+                  className="form-input !h-[34px] !min-h-[34px] !py-1 text-xs"
                 >
-                  <option value="Pending" className="bg-slate-900 text-amber-300">Pending</option>
-                  <option value="In Progress" className="bg-slate-900 text-cyan-300">In Progress</option>
-                  <option value="Resolved" className="bg-slate-900 text-emerald-300">Resolved</option>
-                  <option value="Closed" className="bg-slate-900 text-slate-400">Closed</option>
+                  <option value="Pending">New</option>
+                  <option value="In Progress">In progress</option>
+                  <option value="Resolved">Resolved</option>
+                  <option value="Closed">Closed</option>
                 </select>
               </div>
 
               <button
                 onClick={() => setSelectedInquiry(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors"
+                className="btn-secondary !text-xs !py-1.5 !px-4 !min-h-[34px]"
               >
                 Close
               </button>
