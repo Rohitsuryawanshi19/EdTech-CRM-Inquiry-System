@@ -52,12 +52,27 @@ app.use(
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
+// Root Welcome Endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'K12 : EdTech CRM & Inquiry System API',
+    status: 'online',
+    version: '1.0.0',
+    documentation: 'See README for full API specification',
+    endpoints: {
+      health: '/api/health',
+      inquiries: '/api/inquiries',
+      auth: '/api/auth/login',
+    },
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'online',
     timestamp: new Date().toISOString(),
-    service: 'K12 Hunar EdTech CRM Backend',
+    service: 'K12 : EdTech CRM Backend',
     version: '1.0.0',
   });
 });
